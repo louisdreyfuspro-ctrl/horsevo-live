@@ -185,9 +185,10 @@
     </div>
     <div class="pleg">
       <span><em style="background:#E0A237"></em><b id="n-createurs">—</b>&nbsp;ont créé leur écurie</span>
-      <span><em style="background:#8A6B2E"></em><b id="n-invites">—</b>&nbsp;ont rejoint une écurie</span>
+      <span><em style="background:#8A6B2E"></em><b id="n-invites">—</b>&nbsp;ont rejoint l'écurie d'un autre</span>
       <span><em style="background:#3A3630"></em><b id="n-bloques">—</b>&nbsp;décrochés avant l'écurie</span>
     </div>
+    <p id="orphelines" class="quoi" style="margin-top:12px"></p>
   </section>
 
   <div class="corps">
@@ -319,6 +320,10 @@ function rendre(d) {
   document.getElementById("n-createurs").textContent = cr;
   document.getElementById("n-invites").textContent = iv;
   document.getElementById("n-bloques").textContent = bl;
+  const notes = [];
+  if (d.fiches_equipe) notes.push(`${d.fiches_equipe} fiches d'équipe saisies à la main (sans compte)`);
+  if (d.orphelines) notes.push(`${d.orphelines} écurie${d.orphelines > 1 ? "s" : ""} sans propriétaire (à nettoyer)`);
+  document.getElementById("orphelines").textContent = notes.join("  ·  ");
 
   if (nouveau) {
     const f = document.getElementById("flash");
