@@ -139,6 +139,15 @@
 
   .erreur { color: #E8534A; font-size: 13px; margin-top: 20px; min-height: 18px; }
 
+  /* parcours d'inscription */
+  .parcours { margin: 6px 0 40px; }
+  .pbar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: #14120E; }
+  .pbar i { display: block; transition: width .8s cubic-bezier(.22,1,.36,1); }
+  .pleg { display: flex; flex-wrap: wrap; gap: 12px 26px; margin-top: 15px; font-size: 13.5px; color: var(--mute); }
+  .pleg span { display: inline-flex; align-items: center; gap: 8px; }
+  .pleg em { width: 8px; height: 8px; border-radius: 2px; flex: none; font-style: normal; }
+  .pleg b { color: var(--ink); font-weight: 700; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
   }
@@ -167,6 +176,20 @@
     <p class="erreur" id="erreur"></p>
   </section>
 
+  <section class="parcours">
+    <h2>Le parcours d'inscription</h2>
+    <div class="pbar">
+      <i id="p-createurs" style="background:#E0A237"></i>
+      <i id="p-invites" style="background:#8A6B2E"></i>
+      <i id="p-bloques" style="background:#3A3630"></i>
+    </div>
+    <div class="pleg">
+      <span><em style="background:#E0A237"></em><b id="n-createurs">—</b>&nbsp;ont créé leur écurie</span>
+      <span><em style="background:#8A6B2E"></em><b id="n-invites">—</b>&nbsp;ont rejoint une écurie</span>
+      <span><em style="background:#3A3630"></em><b id="n-bloques">—</b>&nbsp;décrochés avant l'écurie</span>
+    </div>
+  </section>
+
   <div class="corps">
     <section>
       <h2>Les 24 dernières heures</h2>
@@ -183,7 +206,7 @@
   <div class="pied">
     <div><div class="n" id="chevaux">—</div><div class="l">chevaux</div></div>
     <div><div class="n" id="ecuries">—</div><div class="l">écuries</div></div>
-    <div><div class="n" id="stories">—</div><div class="l">stories créées</div></div>
+    <div><div class="n" id="stories">—</div><div class="l">stories créées<span id="stories-jour"></span></div></div>
   </div>
 </div>
 
@@ -284,6 +307,18 @@ function rendre(d) {
   document.getElementById("chevaux").textContent = d.chevaux;
   document.getElementById("ecuries").textContent = d.ecuries;
   document.getElementById("stories").textContent = d.stories;
+  document.getElementById("stories-jour").textContent =
+    d.stories_jour ? ` · ${d.stories_jour} aujourd'hui` : "";
+
+  // Parcours d'inscription : créé son écurie / rejoint une écurie / décroché.
+  const cr = d.createurs ?? 0, iv = d.invites ?? 0, bl = d.bloques ?? 0;
+  const tot = Math.max(1, cr + iv + bl);
+  document.getElementById("p-createurs").style.width = (cr / tot * 100) + "%";
+  document.getElementById("p-invites").style.width = (iv / tot * 100) + "%";
+  document.getElementById("p-bloques").style.width = (bl / tot * 100) + "%";
+  document.getElementById("n-createurs").textContent = cr;
+  document.getElementById("n-invites").textContent = iv;
+  document.getElementById("n-bloques").textContent = bl;
 
   if (nouveau) {
     const f = document.getElementById("flash");
