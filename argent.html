@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Horsevo · Le registre</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Cormorant+Garamond:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<!-- Typo « style Apple » : San Francisco, la police système -->
 <style>
   :root {
     --fond: #0C0A07;
@@ -22,7 +21,8 @@
   body {
     background: var(--fond);
     color: var(--encre);
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+    font-feature-settings: "tnum";
     min-height: 100vh;
     padding: 20px 18px calc(40px + env(safe-area-inset-bottom));
   }
@@ -34,16 +34,14 @@
     border-bottom: 2px solid var(--filet); padding-bottom: 12px;
   }
   .titre-maison { font-size: 11px; letter-spacing: .5em; color: var(--or); }
-  .horloge { font-size: 12px; color: var(--gris); font-variant-numeric: tabular-nums; }
+  .horloge { font-size: 12px; font-weight: 500; color: var(--gris); font-variant-numeric: tabular-nums; }
   .horloge .sec { color: var(--or-vif); }
-  .date-ligne {
-    font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
-    font-size: 17px; color: var(--gris); margin-top: 12px;
-  }
+  .date-ligne { font-size: 14px; color: var(--gris); margin-top: 12px; font-weight: 500; }
 
   h1 {
-    font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400;
-    font-size: clamp(38px, 9vw, 62px); margin-top: 4px; letter-spacing: .01em;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+    font-weight: 700; letter-spacing: -0.025em;
+    font-size: clamp(38px, 9vw, 62px); margin-top: 4px;
   }
 
   /* ── Le montant + le rebours, asymétriques ───────────────────── */
@@ -54,6 +52,8 @@
   .volets { display: flex; gap: 5px; margin-top: 12px; flex-wrap: wrap; }
   .volet {
     display: inline-block; min-width: .72em; text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+    font-weight: 600; letter-spacing: -0.02em;
     font-size: clamp(40px, 9.6vw, 74px); line-height: 1.18;
     color: var(--or-vif); background: rgba(241, 234, 218, .045);
     border-bottom: 2px solid rgba(201, 162, 39, .35);
@@ -61,32 +61,30 @@
     font-variant-numeric: tabular-nums;
   }
   .volet.signe { background: transparent; border-bottom-color: transparent; color: var(--or); }
-  .montant .phrase {
-    font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
-    font-size: 16.5px; color: var(--gris); margin-top: 14px; max-width: 40ch; line-height: 1.5;
-  }
+  .montant .phrase { font-size: 13.5px; color: var(--gris); margin-top: 14px; max-width: 44ch; line-height: 1.55; }
   .montant .phrase b { color: var(--encre); font-weight: 400; }
 
   .rebours { border-left: 1px solid var(--filet-doux); padding-left: 22px; }
   @media (max-width: 640px) { .rebours { border-left: none; padding-left: 0; border-top: 1px solid var(--filet-doux); padding-top: 18px; } }
   .rebours .grand {
-    font-family: 'Libre Caslon Display', Georgia, serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+    font-weight: 700; letter-spacing: -0.02em;
     font-size: clamp(40px, 8vw, 58px); color: var(--encre); line-height: 1;
   }
   .rebours .grand .battement { display: inline-block; animation: bat 1.6s ease-in-out infinite; transform-origin: 50% 60%; }
   @keyframes bat { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.06); } 24% { transform: scale(1); } }
-  .rebours .expl {
-    font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
-    font-size: 15.5px; color: var(--gris); margin-top: 8px; line-height: 1.5;
-  }
+  .rebours .expl { font-size: 13px; color: var(--gris); margin-top: 10px; line-height: 1.55; }
 
   /* ── Le registre (points de conduite) ────────────────────────── */
   .section-titre {
     display: flex; justify-content: space-between; align-items: baseline;
     margin: 42px 0 4px; border-bottom: 1px solid var(--filet); padding-bottom: 8px;
   }
-  .section-titre h2 { font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; }
-  .section-titre .apostille { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 15px; color: var(--gris); }
+  .section-titre h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+    font-weight: 700; letter-spacing: -0.015em; font-size: 21px;
+  }
+  .section-titre .apostille { font-size: 12.5px; color: var(--gris); }
 
   .registre { margin-top: 8px; }
   .ligne {
@@ -96,7 +94,7 @@
   .ligne + .ligne { border-top: 1px dashed rgba(241, 234, 218, .05); }
   .ligne .quoi { color: var(--encre); }
   .ligne .points { flex: 1; border-bottom: 1px dotted rgba(241, 234, 218, .22); transform: translateY(-4px); }
-  .ligne .val { font-size: 17px; font-variant-numeric: tabular-nums; color: var(--or-vif); }
+  .ligne .val { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--or-vif); }
   .ligne .val.vert { color: var(--vert); }
   .ligne .val.neutre { color: var(--encre); }
   .ligne .detail { font-size: 11px; color: var(--gris); }
@@ -121,16 +119,13 @@
   .route .reperes { display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: var(--gris); }
   .route .reperes b { color: var(--encre); font-weight: 500; display: block; font-size: 13px; }
   .route .reperes .fin { text-align: right; }
-  .route .apres {
-    font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
-    font-size: 15.5px; color: var(--gris); margin-top: 16px; line-height: 1.55;
-  }
+  .route .apres { font-size: 13px; color: var(--gris); margin-top: 16px; line-height: 1.6; }
   .route .apres b { color: var(--or-vif); font-weight: 400; }
 
   /* ── Le mouvement (graphe) ───────────────────────────────────── */
   .choix { display: flex; gap: 18px; }
   .choix button {
-    font: 500 12px 'IBM Plex Mono', monospace; letter-spacing: .12em;
+    font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: .1em;
     color: var(--gris); background: none; border: none; padding: 4px 0;
     border-bottom: 2px solid transparent; cursor: pointer; transition: all .2s;
   }
@@ -150,7 +145,7 @@
     display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
     font-size: 11px; color: var(--gris);
   }
-  .colophon i { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 14px; }
+  .colophon i { font-style: normal; font-size: 11.5px; }
 
   .erreur { text-align: center; padding: 80px 20px; color: var(--gris); font-size: 13px; }
 
@@ -435,7 +430,7 @@ function dessiner(pts) {
     c.stroke();
 
     c.fillStyle = "rgba(143,134,114,.95)";
-    c.font = "10px 'IBM Plex Mono', monospace";
+    c.font = "10px -apple-system, 'Helvetica Neue', sans-serif";
     c.textAlign = "center";
     const saut = Math.ceil(n / 8);
     for (let i = 0; i < n; i += saut) c.fillText(pts[i].cle, px(i), H - 10);
