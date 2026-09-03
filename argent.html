@@ -4,196 +4,171 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Horsevo · L'argent</title>
+<title>Horsevo · Le registre</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Cormorant+Garamond:ital,wght@1,500&family=IBM+Plex+Mono:wght@400;500;600&family=Poppins:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Cormorant+Garamond:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root {
-    --fond: #0A0906;
-    --carte: rgba(244, 239, 226, .028);
-    --ligne: rgba(201, 162, 39, .16);
-    --ligne-faible: rgba(201, 162, 39, .07);
+    --fond: #0C0A07;
+    --encre: #F1EADA;
     --or: #C9A227;
-    --or-vif: #EBCA63;
-    --or-pale: #8C7420;
-    --ivoire: #F4EFE2;
-    --gris: #978E79;
-    --vert: #86DCA8;
+    --or-vif: #E9C761;
+    --gris: #8F8672;
+    --vert: #8FD9AC;
+    --filet: rgba(201, 162, 39, .22);
+    --filet-doux: rgba(241, 234, 218, .10);
   }
   * { margin: 0; box-sizing: border-box; }
   body {
     background: var(--fond);
-    color: var(--ivoire);
-    font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+    color: var(--encre);
+    font-family: 'IBM Plex Mono', monospace;
     min-height: 100vh;
-    padding: 22px 16px calc(34px + env(safe-area-inset-bottom));
-    overflow-x: hidden;
+    padding: 20px 18px calc(40px + env(safe-area-inset-bottom));
   }
-  /* Voile lumineux qui RESPIRE, en boucle lente — la pièce est vivante. */
-  body::before {
-    content: ""; position: fixed; inset: -20% -10% auto;
-    height: 70vh; pointer-events: none; z-index: 0;
-    background: radial-gradient(60% 60% at 50% 20%, rgba(201,162,39,.13), transparent 70%);
-    animation: respire 9s ease-in-out infinite;
-  }
-  @keyframes respire { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+  .page { max-width: 840px; margin: 0 auto; }
 
-  .page { max-width: 920px; margin: 0 auto; position: relative; z-index: 1; }
+  /* ── Manchette ───────────────────────────────────────────────── */
+  .manchette {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 2px solid var(--filet); padding-bottom: 12px;
+  }
+  .titre-maison { font-size: 11px; letter-spacing: .5em; color: var(--or); }
+  .horloge { font-size: 12px; color: var(--gris); font-variant-numeric: tabular-nums; }
+  .horloge .sec { color: var(--or-vif); }
+  .date-ligne {
+    font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
+    font-size: 17px; color: var(--gris); margin-top: 12px;
+  }
 
-  /* ── En-tête ─────────────────────────────────────────────────── */
-  .haut { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .marque { font-size: 12px; font-weight: 600; letter-spacing: .52em; color: var(--or); }
-  .direct { display: flex; align-items: center; gap: 7px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .14em; color: var(--gris); }
-  .point {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--or-vif);
-    animation: pouls 2.4s cubic-bezier(.4, 0, .2, 1) infinite;
-  }
-  @keyframes pouls {
-    0% { box-shadow: 0 0 0 0 rgba(235,202,99,.45); }
-    70% { box-shadow: 0 0 0 9px rgba(235,202,99,0); }
-    100% { box-shadow: 0 0 0 0 rgba(235,202,99,0); }
-  }
   h1 {
+    font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400;
+    font-size: clamp(38px, 9vw, 62px); margin-top: 4px; letter-spacing: .01em;
+  }
+
+  /* ── Le montant + le rebours, asymétriques ───────────────────── */
+  .scene { display: grid; grid-template-columns: 1.5fr 1fr; gap: 26px; margin-top: 30px; align-items: end; }
+  @media (max-width: 640px) { .scene { grid-template-columns: 1fr; } }
+
+  .montant .etiquette { font-size: 10.5px; letter-spacing: .34em; color: var(--or); }
+  .volets { display: flex; gap: 5px; margin-top: 12px; flex-wrap: wrap; }
+  .volet {
+    display: inline-block; min-width: .72em; text-align: center;
+    font-size: clamp(40px, 9.6vw, 74px); line-height: 1.18;
+    color: var(--or-vif); background: rgba(241, 234, 218, .045);
+    border-bottom: 2px solid rgba(201, 162, 39, .35);
+    border-radius: 6px; padding: 2px 4px 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .volet.signe { background: transparent; border-bottom-color: transparent; color: var(--or); }
+  .montant .phrase {
+    font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
+    font-size: 16.5px; color: var(--gris); margin-top: 14px; max-width: 40ch; line-height: 1.5;
+  }
+  .montant .phrase b { color: var(--encre); font-weight: 400; }
+
+  .rebours { border-left: 1px solid var(--filet-doux); padding-left: 22px; }
+  @media (max-width: 640px) { .rebours { border-left: none; padding-left: 0; border-top: 1px solid var(--filet-doux); padding-top: 18px; } }
+  .rebours .grand {
     font-family: 'Libre Caslon Display', Georgia, serif;
-    font-weight: 400; font-size: clamp(30px, 6.4vw, 44px);
-    margin: 22px 0 6px; text-wrap: balance;
+    font-size: clamp(40px, 8vw, 58px); color: var(--encre); line-height: 1;
   }
-  .sous { color: var(--gris); font-size: 13px; max-width: 56ch; line-height: 1.55; }
-
-  /* ── Le compteur ─────────────────────────────────────────────── */
-  .scene {
-    margin-top: 26px; text-align: center; padding: 44px 12px 40px;
-    border-radius: 26px; position: relative; overflow: hidden;
-    border: 1px solid var(--ligne);
-    background:
-      linear-gradient(180deg, rgba(201,162,39,.075), rgba(201,162,39,.012) 55%),
-      radial-gradient(120% 90% at 50% 115%, rgba(201,162,39,.06), transparent 60%);
-  }
-  .scene .libelle {
-    font-size: 11px; font-weight: 600; letter-spacing: .38em; color: var(--or);
-  }
-  .euros {
-    font-family: 'IBM Plex Mono', monospace; font-weight: 500;
-    font-size: clamp(52px, 13vw, 96px); line-height: 1.05; margin-top: 10px;
-    font-variant-numeric: tabular-nums; position: relative; display: inline-block;
-    background: linear-gradient(100deg, #B9932A 0%, #EBCA63 38%, #FFF3C4 50%, #EBCA63 62%, #B9932A 100%);
-    background-size: 220% 100%;
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    animation: reflet 5.5s ease-in-out infinite;
-    filter: drop-shadow(0 0 26px rgba(201,162,39,.28));
-  }
-  @keyframes reflet { 0%, 100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
-  .depuis {
+  .rebours .grand .battement { display: inline-block; animation: bat 1.6s ease-in-out infinite; transform-origin: 50% 60%; }
+  @keyframes bat { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.06); } 24% { transform: scale(1); } }
+  .rebours .expl {
     font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
-    font-size: 16px; color: var(--gris); margin-top: 10px;
+    font-size: 15.5px; color: var(--gris); margin-top: 8px; line-height: 1.5;
   }
 
-  /* ── Le bandeau défilant ─────────────────────────────────────── */
-  .bande {
-    margin-top: 16px; border-block: 1px solid var(--ligne-faible);
-    overflow: hidden; white-space: nowrap; padding: 9px 0;
-    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  /* ── Le registre (points de conduite) ────────────────────────── */
+  .section-titre {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin: 42px 0 4px; border-bottom: 1px solid var(--filet); padding-bottom: 8px;
   }
-  .bande .rail { display: inline-block; animation: defile 36s linear infinite; }
-  @keyframes defile { to { transform: translateX(-50%); } }
-  .bande span {
-    font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .16em;
-    color: var(--gris); padding: 0 22px;
-  }
-  .bande b { color: var(--or-vif); font-weight: 600; }
-  .bande i { color: var(--or-pale); font-style: normal; padding: 0 4px; }
+  .section-titre h2 { font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; }
+  .section-titre .apostille { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 15px; color: var(--gris); }
 
-  /* ── Les cartes ──────────────────────────────────────────────── */
-  .cartes { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 10px; margin-top: 16px; }
-  .carte {
-    background: var(--carte); border: 1px solid var(--ligne-faible); border-radius: 18px;
-    padding: 16px 17px 13px; transition: border-color .3s;
+  .registre { margin-top: 8px; }
+  .ligne {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 11px 0; font-size: 14px;
   }
-  .carte:hover { border-color: var(--ligne); }
-  .carte .v {
-    font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 28px;
-    font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
-  }
-  .carte .v.or { color: var(--or-vif); }
-  .carte .v.vert { color: var(--vert); }
-  .carte .l { font-size: 11px; color: var(--gris); margin-top: 4px; line-height: 1.4; }
+  .ligne + .ligne { border-top: 1px dashed rgba(241, 234, 218, .05); }
+  .ligne .quoi { color: var(--encre); }
+  .ligne .points { flex: 1; border-bottom: 1px dotted rgba(241, 234, 218, .22); transform: translateY(-4px); }
+  .ligne .val { font-size: 17px; font-variant-numeric: tabular-nums; color: var(--or-vif); }
+  .ligne .val.vert { color: var(--vert); }
+  .ligne .val.neutre { color: var(--encre); }
+  .ligne .detail { font-size: 11px; color: var(--gris); }
 
-  /* ── L'horizon ───────────────────────────────────────────────── */
-  .horizon {
-    margin-top: 16px; border: 1px solid var(--ligne-faible); border-radius: 20px;
-    padding: 20px 20px 18px; background: var(--carte);
+  /* ── La route (le cap) ───────────────────────────────────────── */
+  .route { margin-top: 10px; position: relative; padding: 26px 0 6px; }
+  .rail { height: 2px; background: var(--filet-doux); position: relative; }
+  .rail .granule { position: absolute; top: -3px; width: 1px; height: 8px; background: rgba(241,234,218,.18); }
+  .rail .fait {
+    position: absolute; left: 0; top: -1px; height: 4px; width: 0%;
+    background: linear-gradient(90deg, rgba(201,162,39,.5), var(--or-vif));
+    transition: width 1.8s cubic-bezier(.2, .7, .15, 1);
   }
-  .horizon .titre {
-    display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  .rail .curseur {
+    position: absolute; top: 50%; left: 0%; transform: translate(-50%, -50%);
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--or-vif); box-shadow: 0 0 0 3px rgba(201,162,39,.18);
+    animation: pouls 2.2s ease-out infinite;
+    transition: left 1.8s cubic-bezier(.2, .7, .15, 1);
   }
-  .horizon h2 {
-    font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 21px;
-  }
-  .horizon .cible { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--gris); letter-spacing: .08em; }
-  .piste {
-    margin-top: 16px; height: 10px; border-radius: 999px; position: relative;
-    background: rgba(244,239,226,.05); border: 1px solid var(--ligne-faible);
-  }
-  .piste .fait {
-    position: absolute; inset: 0 auto 0 0; width: 0%; border-radius: 999px;
-    background: linear-gradient(90deg, var(--or-pale), var(--or-vif));
-    box-shadow: 0 0 14px rgba(201,162,39,.4);
-    transition: width 1.6s cubic-bezier(.2, .7, .2, 1);
-  }
-  .bornes { display: flex; justify-content: space-between; margin-top: 9px; }
-  .borne { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--gris); letter-spacing: .04em; }
-  .borne b { color: var(--ivoire); font-weight: 500; display: block; font-size: 12px; }
-  .horizon .note {
+  @keyframes pouls { 0% { box-shadow: 0 0 0 3px rgba(201,162,39,.22); } 60% { box-shadow: 0 0 0 10px rgba(201,162,39,0); } 100% { box-shadow: 0 0 0 3px rgba(201,162,39,0); } }
+  .route .reperes { display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: var(--gris); }
+  .route .reperes b { color: var(--encre); font-weight: 500; display: block; font-size: 13px; }
+  .route .reperes .fin { text-align: right; }
+  .route .apres {
     font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
-    color: var(--gris); font-size: 15.5px; margin-top: 14px;
+    font-size: 15.5px; color: var(--gris); margin-top: 16px; line-height: 1.55;
   }
-  .horizon .note b { color: var(--or-vif); font-weight: 500; }
+  .route .apres b { color: var(--or-vif); font-weight: 400; }
 
-  /* ── Le graphe ───────────────────────────────────────────────── */
-  .bloc-graphe {
-    margin-top: 16px; background: var(--carte); border: 1px solid var(--ligne-faible);
-    border-radius: 20px; padding: 18px 16px 8px;
-  }
-  .barre-choix { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-  .choix { display: flex; gap: 6px; }
+  /* ── Le mouvement (graphe) ───────────────────────────────────── */
+  .choix { display: flex; gap: 18px; }
   .choix button {
-    font: 500 12px 'Poppins', sans-serif; letter-spacing: .08em;
-    color: var(--gris); background: transparent; border: 1px solid var(--ligne-faible);
-    border-radius: 999px; padding: 8px 18px; cursor: pointer; transition: all .22s;
+    font: 500 12px 'IBM Plex Mono', monospace; letter-spacing: .12em;
+    color: var(--gris); background: none; border: none; padding: 4px 0;
+    border-bottom: 2px solid transparent; cursor: pointer; transition: all .2s;
   }
-  .choix button.on { color: #14120D; background: var(--or); border-color: var(--or); font-weight: 600; }
-  .choix button:not(.on):hover { border-color: var(--ligne); color: var(--ivoire); }
-  .serie { font-size: 11px; color: var(--gris); font-family: 'IBM Plex Mono', monospace; }
-  .serie b { color: var(--or-vif); font-weight: 600; }
-  canvas { width: 100%; height: 270px; display: block; margin-top: 12px; }
-  .legende { display: flex; gap: 18px; font-size: 11px; color: var(--gris); padding: 10px 4px 8px; }
-  .pastille { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 6px; }
+  .choix button.on { color: var(--or-vif); border-bottom-color: var(--or); }
+  .graphe-cadre { position: relative; margin-top: 14px; }
+  canvas { width: 100%; height: 250px; display: block; }
+  .point-vif {
+    position: absolute; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--vert); transform: translate(-50%, -50%);
+    animation: pouls 1.8s ease-out infinite; pointer-events: none;
+  }
+  .legende { display: flex; gap: 20px; font-size: 11px; color: var(--gris); margin-top: 10px; }
+  .trait { display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 7px; }
 
-  .erreur { text-align: center; padding: 70px 20px; color: var(--gris); font-size: 14px; }
-  .pied {
-    text-align: center; margin-top: 30px;
-    font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
-    font-size: 16px; color: var(--gris);
+  .colophon {
+    margin-top: 46px; border-top: 2px solid var(--filet); padding-top: 14px;
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    font-size: 11px; color: var(--gris);
   }
-  .pied b { color: var(--or-vif); font-weight: 500; }
+  .colophon i { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 14px; }
+
+  .erreur { text-align: center; padding: 80px 20px; color: var(--gris); font-size: 13px; }
 
   @media (prefers-reduced-motion: reduce) {
-    body::before, .euros, .point, .bande .rail { animation: none !important; }
-    .piste .fait { transition: none; }
+    .battement, .curseur, .point-vif { animation: none !important; }
   }
 </style>
 </head>
 <body>
 <div class="page">
-  <div class="haut">
-    <div class="marque">H O R S E V O</div>
-    <div class="direct"><span class="point"></span><span id="maj">EN DIRECT</span></div>
+  <div class="manchette">
+    <div class="titre-maison">H O R S E V O</div>
+    <div class="horloge" id="horloge">--:--:--</div>
   </div>
-  <h1>L'argent, en direct.</h1>
-  <div class="sous">Chiffres officiels App Store, relevés chaque jour. Ce qui s'affiche ici est le net encaissé, après TVA et commission Apple : l'argent vraiment gagné.</div>
+  <h1>Le registre.</h1>
+  <div class="date-ligne" id="dateLigne">…</div>
 
-  <div id="contenu" class="erreur">Connexion aux chiffres…</div>
+  <div id="contenu" class="erreur">Ouverture du registre…</div>
 </div>
 
 <script>
@@ -201,11 +176,31 @@ const JETON = (location.hash || "").slice(1);
 const RPC = "https://dqvmnetwdjidykmqaujg.supabase.co/rest/v1/rpc/finances_stats";
 const CLE_ANON = "sb_publishable_xV_Q76hgY9MFzjUEeFyo0Q_P0JLm1yb";
 const NET_MENSUEL = 7.08;
-const SEUIL = 350; // le cap fondateur : 350 abonnés = 2 500 € nets / mois
+const SEUIL = 350;
+const JOUR_VERITE = new Date("2026-09-05T00:00:00+02:00");
 let donnees = null;
 let vue = "jour";
 
-const eur = (n) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+/* Horloge vivante : la page bat la seconde, comme une salle des marchés. */
+function tictac() {
+  const n = new Date();
+  const hh = String(n.getHours()).padStart(2, "0");
+  const mm = String(n.getMinutes()).padStart(2, "0");
+  const ss = String(n.getSeconds()).padStart(2, "0");
+  document.getElementById("horloge").innerHTML = `${hh}:${mm}<span class="sec">:${ss}</span>`;
+}
+tictac(); setInterval(tictac, 1000);
+
+function majDateLigne() {
+  const n = new Date();
+  const jPlus = Math.floor((n - new Date("2026-08-02T00:00:00+02:00")) / 86400000);
+  const date = n.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  document.getElementById("dateLigne").textContent =
+    date.charAt(0).toUpperCase() + date.slice(1) + " · " + jPlus + "ᵉ jour depuis le lancement";
+}
+majDateLigne();
+
+const eur2 = (n) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const eurCourt = (n) => n >= 1000 ? (n / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 }) + " k€" : Math.round(n) + " €";
 
 async function charger() {
@@ -220,8 +215,29 @@ async function charger() {
     rendre();
   } catch (e) {
     document.getElementById("contenu").innerHTML =
-      '<div class="erreur">Accès refusé ou chiffres indisponibles.<br>Vérifie le lien complet, avec sa clé après le #.</div>';
+      '<div class="erreur">Le registre ne s\'ouvre pas.<br>Vérifie le lien complet, avec sa clé après le #.</div>';
   }
+}
+
+/* Chiffres à VOLETS : chaque chiffre roule comme un tableau d'affichage
+   de gare ou d'hippodrome avant de se poser. */
+function poserVolets(conteneur, texte) {
+  conteneur.innerHTML = "";
+  [...texte].forEach((ch, i) => {
+    const v = document.createElement("span");
+    const estChiffre = /[0-9]/.test(ch);
+    v.className = "volet" + (estChiffre ? "" : " signe");
+    v.textContent = estChiffre ? "0" : ch;
+    conteneur.appendChild(v);
+    if (estChiffre) {
+      const cible = Number(ch);
+      let tours = 8 + i * 3 + cible;
+      const roule = setInterval(() => {
+        v.textContent = String((Number(v.textContent) + 1) % 10);
+        if (--tours <= 0) { v.textContent = String(cible); clearInterval(roule); }
+      }, 55 + i * 6);
+    }
+  });
 }
 
 function agreger(jours, mode) {
@@ -242,77 +258,107 @@ function rendre() {
   const dernier = jours[jours.length - 1] || { essais: 0, codes: 0, payants: 0, nouveaux: 0 };
   const total = +d.total_eur;
   const mrr = dernier.payants * NET_MENSUEL;
-  const pct = Math.min(100, dernier.payants / SEUIL * 100);
+  const enSelle = dernier.essais + dernier.codes + dernier.payants;
   const maj = d.maj ? new Date(d.maj) : null;
-  document.getElementById("maj").textContent = maj
-    ? "RELEVÉ " + maj.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }) + " · " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
-    : "EN DIRECT";
 
-  const ticker = `
-    <span><i>◆</i> <b>${dernier.essais}</b> ESSAIS EN COURS</span>
-    <span><i>◆</i> <b>+${dernier.nouveaux}</b> NOUVEAUX AU DERNIER RELEVÉ</span>
-    <span><i>◆</i> <b>${dernier.payants}</b> ABONNÉS PAYANTS</span>
-    <span><i>◆</i> MRR <b>${eurCourt(mrr)}</b></span>
-    <span><i>◆</i> CAP <b>${SEUIL} ABONNÉS</b> = 2 500 € / MOIS</span>
-    <span><i>◆</i> PREMIÈRES CONVERSIONS ATTENDUES LE <b>05.09</b></span>`;
+  const joursRestants = Math.ceil((JOUR_VERITE - new Date()) / 86400000);
+  const rebours = joursRestants > 0
+    ? `<div class="grand">J<span class="battement">−${joursRestants}</span></div>
+       <div class="expl">avant les premiers paiements : le mois offert de la grande vague du 4 août se referme le 5 septembre. Ensuite, chaque matin comptera.</div>`
+    : dernier.payants > 0
+      ? `<div class="grand"><span class="battement">${dernier.payants}</span></div>
+         <div class="expl">${dernier.payants > 1 ? "cavaliers paient" : "cavalier paie"} désormais chaque mois. La conversion est ouverte, le registre s'écrit.</div>`
+      : `<div class="grand"><span class="battement">Ouvert</span></div>
+         <div class="expl">le temps des conversions a commencé : les premiers paiements peuvent tomber chaque matin, ils s'inscriront ici.</div>`;
 
   document.getElementById("contenu").className = "";
   document.getElementById("contenu").innerHTML = `
     <div class="scene">
-      <div class="libelle">NET ENCAISSÉ</div>
-      <div class="euros" id="gros">0,00&nbsp;€</div>
-      <div class="depuis">depuis le lancement, le 2 août 2026</div>
+      <div class="montant">
+        <div class="etiquette">NET ENCAISSÉ</div>
+        <div class="volets" id="volets"></div>
+        <div class="phrase">Tout ce que l'App Store a versé depuis le 2 août, <b>TVA et commission déjà retirées</b> : l'argent vraiment gagné, à l'euro près.</div>
+      </div>
+      <div class="rebours">${rebours}</div>
     </div>
 
-    <div class="bande"><div class="rail">${ticker}${ticker}</div></div>
-
-    <div class="cartes">
-      <div class="carte"><div class="v or" id="cPayants">0</div><div class="l">abonnés qui paient aujourd'hui</div></div>
-      <div class="carte"><div class="v" id="cMrr">0&nbsp;€</div><div class="l">revenu mensuel récurrent</div></div>
-      <div class="carte"><div class="v" id="cEssais">0</div><div class="l">essais gratuits en cours</div></div>
-      <div class="carte"><div class="v" id="cCodes">0</div><div class="l">codes invités actifs</div></div>
-      <div class="carte"><div class="v vert" id="cNvx">0</div><div class="l">nouveaux essais au dernier relevé</div></div>
+    <div class="section-titre">
+      <h2>Le registre du jour</h2>
+      <div class="apostille" id="apostille"></div>
+    </div>
+    <div class="registre">
+      <div class="ligne"><span class="quoi">Cavaliers en selle</span><span class="points"></span><span class="detail">essai, code ou abonnement</span><span class="val neutre" id="rSelle">0</span></div>
+      <div class="ligne"><span class="quoi">Essais gratuits en cours</span><span class="points"></span><span class="val" id="rEssais">0</span></div>
+      <div class="ligne"><span class="quoi">Codes invités actifs</span><span class="points"></span><span class="val" id="rCodes">0</span></div>
+      <div class="ligne"><span class="quoi">Abonnés payants</span><span class="points"></span><span class="val" id="rPayants">0</span></div>
+      <div class="ligne"><span class="quoi">Revenu mensuel récurrent</span><span class="points"></span><span class="val" id="rMrr">0 €</span></div>
+      <div class="ligne"><span class="quoi">Nouveaux essais au dernier relevé</span><span class="points"></span><span class="val vert" id="rNvx">+0</span></div>
     </div>
 
-    <div class="horizon">
-      <div class="titre">
-        <h2>L'horizon</h2>
-        <div class="cible">${dernier.payants} / ${SEUIL} ABONNÉS</div>
+    <div class="section-titre">
+      <h2>La route</h2>
+      <div class="apostille">premier cap : ${SEUIL} abonnés, le salaire du fondateur</div>
+    </div>
+    <div class="route">
+      <div class="rail" id="rail">
+        <div class="fait" id="fait"></div>
+        <div class="curseur" id="curseur"></div>
       </div>
-      <div class="piste"><div class="fait" id="piste"></div></div>
-      <div class="bornes">
-        <div class="borne"><b>0</b>départ</div>
-        <div class="borne" style="text-align:right"><b>${SEUIL} abonnés</b>le cap fondateur · 2 500 € nets / mois</div>
+      <div class="reperes">
+        <div><b>0</b>le départ</div>
+        <div class="fin"><b>${SEUIL} abonnés</b>2 500 € nets par mois</div>
       </div>
-      <div class="note">Après ce cap : <b>907</b> fin 2026 en trajectoire attendue, <b>10 000</b> à l'échelle du marché européen — et chaque abonné vaut <b>118 €</b> sur sa durée de vie.</div>
+      <div class="apres">Après ce cap, la route continue : <b>907</b> à la fin de l'année si la trajectoire tient, <b>10 000</b> à l'horizon du marché européen. Chaque cavalier converti vaut <b>118 €</b> sur sa durée de vie.</div>
     </div>
 
-    <div class="bloc-graphe">
-      <div class="barre-choix">
-        <div class="choix">
-          <button data-v="jour">Jour</button>
-          <button data-v="mois">Mois</button>
-          <button data-v="an">Année</button>
-        </div>
-        <div class="serie" id="serie"></div>
+    <div class="section-titre">
+      <h2>Le mouvement</h2>
+      <div class="choix">
+        <button data-v="jour">JOUR</button>
+        <button data-v="mois">MOIS</button>
+        <button data-v="an">ANNÉE</button>
       </div>
+    </div>
+    <div class="graphe-cadre">
       <canvas id="graphe"></canvas>
-      <div class="legende">
-        <span><span class="pastille" style="background:var(--or-vif)"></span>encaissé (€)</span>
-        <span><span class="pastille" style="background:var(--vert)"></span>nouveaux essais</span>
-      </div>
+      <div class="point-vif" id="pointVif" hidden></div>
+    </div>
+    <div class="legende">
+      <span><span class="trait" style="background:var(--or-vif)"></span>encaissé (€)</span>
+      <span><span class="trait" style="background:var(--vert)"></span>nouveaux essais</span>
     </div>
 
-    <div class="pied">La passion mérite d'être vue — <b>et comptée</b>.</div>
+    <div class="colophon">
+      <span><i>Écrit tout seul, chaque matin, depuis les registres officiels d'Apple.</i></span>
+      <span id="releve"></span>
+    </div>
   `;
 
-  animer("gros", total, (v) => eur(v));
-  animerNombre("cPayants", dernier.payants);
-  document.getElementById("cMrr").textContent = eurCourt(mrr);
-  animerNombre("cEssais", dernier.essais);
-  animerNombre("cCodes", dernier.codes);
-  document.getElementById("cNvx").textContent = "+" + dernier.nouveaux;
-  requestAnimationFrame(() => { document.getElementById("piste").style.width = Math.max(pct, dernier.payants > 0 ? 1.5 : 0) + "%"; });
+  poserVolets(document.getElementById("volets"), eur2(total) + " €");
+  document.getElementById("apostille").textContent = dernier.essais > 0 || dernier.payants > 0
+    ? enSelle + " cavaliers tiennent les rênes en ce moment" : "";
+  document.getElementById("releve").textContent = maj
+    ? "Dernier relevé : " + maj.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }) + " à " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
+    : "";
+
+  compte("rSelle", enSelle);
+  compte("rEssais", dernier.essais);
+  compte("rCodes", dernier.codes);
+  compte("rPayants", dernier.payants);
+  document.getElementById("rMrr").textContent = eurCourt(mrr);
+  document.getElementById("rNvx").textContent = "+" + dernier.nouveaux;
+
+  const pct = Math.min(100, dernier.payants / SEUIL * 100);
+  const rail = document.getElementById("rail");
+  for (let i = 1; i < 7; i++) {
+    const g = document.createElement("div");
+    g.className = "granule"; g.style.left = (i * 100 / 7) + "%";
+    rail.appendChild(g);
+  }
+  requestAnimationFrame(() => {
+    document.getElementById("fait").style.width = pct + "%";
+    document.getElementById("curseur").style.left = pct + "%";
+  });
 
   document.querySelectorAll(".choix button").forEach((b) => {
     b.classList.toggle("on", b.dataset.v === vue);
@@ -321,28 +367,37 @@ function rendre() {
   requestAnimationFrame(() => dessiner(agreger(jours, vue === "an" ? "an" : vue)));
 }
 
-function animer(id, cible, fmt) {
+function compte(id, cible) {
   const el = document.getElementById(id);
-  const debut = performance.now(), duree = 1400;
+  const debut = performance.now(), duree = 1200;
   (function pas(t) {
     const p = Math.min(1, (t - debut) / duree);
-    el.textContent = fmt(cible * (1 - Math.pow(1 - p, 4)));
+    el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 4)));
     if (p < 1) requestAnimationFrame(pas);
   })(debut);
-}
-function animerNombre(id, cible) {
-  animer(id, cible, (v) => Math.round(v).toString());
 }
 
 let animGraphe = 0;
 function dessiner(pts) {
   const cv = document.getElementById("graphe");
+  const vif = document.getElementById("pointVif");
   const dpr = window.devicePixelRatio || 1;
-  const W = cv.clientWidth || cv.parentElement?.clientWidth || 680, H = 270;
+  const W = cv.clientWidth || cv.parentElement?.clientWidth || 660, H = 250;
   cv.width = W * dpr; cv.height = H * dpr;
   const c = cv.getContext("2d");
   const monAnim = ++animGraphe;
-  const debut = performance.now(), duree = 900;
+  const debut = performance.now(), duree = 850;
+  vif.hidden = true;
+
+  const padG = 6, padD = 6, padH = 12, padB = 30;
+  const lw = W - padG - padD, lh = H - padH - padB;
+  const maxEur = Math.max(10, ...pts.map(p => p.eur));
+  const maxNvx = Math.max(4, ...pts.map(p => p.nouveaux));
+  const n = pts.length;
+  const pas = lw / n;
+  const larg = Math.min(30, Math.max(3, pas * 0.5));
+  const px = (i) => padG + pas * i + pas / 2;
+  const py = (i) => padH + lh - lh * pts[i].nouveaux / maxNvx;
 
   function trame(t) {
     if (monAnim !== animGraphe) return;
@@ -350,74 +405,51 @@ function dessiner(pts) {
     const ease = 1 - Math.pow(1 - prog, 3);
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.clearRect(0, 0, W, H);
-    if (!pts.length) return;
+    if (!n) return;
 
-    const padG = 8, padD = 8, padH = 16, padB = 32;
-    const lw = W - padG - padD, lh = H - padH - padB;
-    const maxEur = Math.max(10, ...pts.map(p => p.eur));
-    const maxNvx = Math.max(4, ...pts.map(p => p.nouveaux));
-    const n = pts.length;
-    const pas = lw / n;
-    const larg = Math.min(36, Math.max(4, pas * 0.55));
-
-    c.strokeStyle = "rgba(201,162,39,.08)"; c.lineWidth = 1;
+    c.strokeStyle = "rgba(241,234,218,.06)"; c.lineWidth = 1;
+    c.setLineDash([1, 5]);
     for (let i = 1; i <= 3; i++) {
       const y = padH + lh - (lh * i / 3);
       c.beginPath(); c.moveTo(padG, y); c.lineTo(W - padD, y); c.stroke();
     }
+    c.setLineDash([]);
 
     for (let i = 0; i < n; i++) {
       const x = padG + pas * i + (pas - larg) / 2;
       const h = Math.max(pts[i].eur > 0 ? 3 : 0, lh * pts[i].eur / maxEur) * ease;
       const y = padH + lh - h;
       if (h > 0) {
-        const g = c.createLinearGradient(0, y, 0, y + h);
-        g.addColorStop(0, "#EBCA63"); g.addColorStop(1, "rgba(201,162,39,.22)");
-        c.fillStyle = g;
-        c.shadowColor = "rgba(201,162,39,.5)"; c.shadowBlur = 12;
-        c.beginPath(); c.roundRect(x, y, larg, h, [3, 3, 0, 0]); c.fill();
-        c.shadowBlur = 0;
+        c.fillStyle = "#E9C761";
+        c.fillRect(x, y, larg, h);
       } else {
-        c.fillStyle = "rgba(201,162,39,.16)";
-        c.fillRect(x, padH + lh - 1.5, larg, 1.5);
+        c.fillStyle = "rgba(201,162,39,.22)";
+        c.fillRect(x, padH + lh - 1, larg, 1);
       }
     }
 
-    // aire + ligne des nouveaux essais, tracé PROGRESSIF (le graphe s'écrit)
     const nVisibles = Math.max(2, Math.ceil(n * ease));
-    const px = (i) => padG + pas * i + pas / 2;
-    const py = (i) => padH + lh - lh * pts[i].nouveaux / maxNvx;
-    c.beginPath();
-    c.moveTo(px(0), padH + lh);
-    for (let i = 0; i < nVisibles; i++) c.lineTo(px(i), py(i));
-    c.lineTo(px(nVisibles - 1), padH + lh);
-    c.closePath();
-    const ga = c.createLinearGradient(0, padH, 0, padH + lh);
-    ga.addColorStop(0, "rgba(134,220,168,.14)"); ga.addColorStop(1, "rgba(134,220,168,0)");
-    c.fillStyle = ga; c.fill();
-
-    c.strokeStyle = "#86DCA8"; c.lineWidth = 1.7; c.lineJoin = "round";
+    c.strokeStyle = "#8FD9AC"; c.lineWidth = 1.6; c.lineJoin = "round";
     c.beginPath();
     for (let i = 0; i < nVisibles; i++) i ? c.lineTo(px(i), py(i)) : c.moveTo(px(i), py(i));
     c.stroke();
-    if (prog >= 1) {
-      c.fillStyle = "#86DCA8";
-      for (let i = 0; i < n; i++) { c.beginPath(); c.arc(px(i), py(i), 2.2, 0, 7); c.fill(); }
-    }
 
-    c.fillStyle = "rgba(151,142,121,.95)";
+    c.fillStyle = "rgba(143,134,114,.95)";
     c.font = "10px 'IBM Plex Mono', monospace";
     c.textAlign = "center";
     const saut = Math.ceil(n / 8);
-    for (let i = 0; i < n; i += saut) c.fillText(pts[i].cle, px(i), H - 12);
+    for (let i = 0; i < n; i += saut) c.fillText(pts[i].cle, px(i), H - 10);
 
     if (prog < 1) requestAnimationFrame(trame);
+    else {
+      /* Le DERNIER point bat en continu : la page est en vie. */
+      const cadre = cv.getBoundingClientRect(), parent = cv.parentElement.getBoundingClientRect();
+      vif.style.left = (cadre.left - parent.left + px(n - 1) * (cadre.width / W)) + "px";
+      vif.style.top = (cadre.top - parent.top + py(n - 1) * (cadre.height / H)) + "px";
+      vif.hidden = false;
+    }
   }
   requestAnimationFrame(trame);
-
-  const totalVue = pts.reduce((a, p) => a + p.eur, 0);
-  document.getElementById("serie").innerHTML =
-    `${pts.length} ${vue === "jour" ? "JOURS" : vue === "mois" ? "MOIS" : "ANS"} · <b>${eurCourt(totalVue)}</b>`;
 }
 
 charger();
