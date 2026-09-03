@@ -197,7 +197,10 @@ function rendre() {
     b.classList.toggle("on", b.dataset.v === vue);
     b.onclick = () => { vue = b.dataset.v; rendre(); };
   });
-  dessiner(agreger(jours, vue === "an" ? "an" : vue));
+  // Dessin DIFFÉRÉ d'une frame : si la page se charge dans un onglet masqué,
+  // le canvas se mesure à zéro et le graphe reste blanc. On redessine aussi
+  // au redimensionnement et au retour au premier plan.
+  requestAnimationFrame(() => dessiner(agreger(jours, vue === "an" ? "an" : vue)));
 }
 
 function animer(id, cible, fmt) {
@@ -213,7 +216,7 @@ function animer(id, cible, fmt) {
 function dessiner(pts) {
   const cv = document.getElementById("graphe");
   const dpr = window.devicePixelRatio || 1;
-  const W = cv.clientWidth, H = 260;
+  const W = cv.clientWidth || cv.parentElement?.clientWidth || 640, H = 260;
   cv.width = W * dpr; cv.height = H * dpr;
   const c = cv.getContext("2d");
   c.scale(dpr, dpr);
@@ -286,6 +289,8 @@ function dessiner(pts) {
 
 charger();
 setInterval(charger, 5 * 60 * 1000);
+window.addEventListener("resize", () => donnees && rendre());
+document.addEventListener("visibilitychange", () => !document.hidden && donnees && rendre());
 </script>
 </body>
 </html>
