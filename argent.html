@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Horsevo · L'argent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=IBM+Plex+Mono:wght@400;600&family=Poppins:wght@400;600;700&display=swap">
+<style>
+  :root {
+    --fond: #0B0A08;
+    --carte: #14120D;
+    --ligne: rgba(201, 162, 39, .14);
+    --or: #C9A227;
+    --or-vif: #E8C558;
+    --ivoire: #F4EFE2;
+    --gris: #9A917C;
+    --vert: #7DD8A0;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--fond);
+    background-image: radial-gradient(90% 55% at 50% -12%, rgba(201,162,39,.10), transparent 60%);
+    color: var(--ivoire);
+    font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+    padding: 26px 16px calc(30px + env(safe-area-inset-bottom));
+  }
+  .page { max-width: 880px; margin: 0 auto; }
+  .haut { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .marque { font-size: 12px; font-weight: 700; letter-spacing: .5em; color: var(--or); }
+  .maj { font-size: 11px; color: var(--gris); font-family: 'IBM Plex Mono', monospace; }
+  h1 {
+    font-family: 'Libre Caslon Display', Georgia, serif;
+    font-weight: 400; font-size: clamp(26px, 6vw, 38px);
+    margin: 18px 0 4px;
+  }
+  .sous { color: var(--gris); font-size: 13px; margin-bottom: 26px; }
+
+  /* ── Le compteur ─────────────────────────────────────────────── */
+  .compteur {
+    text-align: center; padding: 34px 10px 30px; border-radius: 22px;
+    background: linear-gradient(180deg, rgba(201,162,39,.07), rgba(201,162,39,.015));
+    border: 1px solid var(--ligne); position: relative; overflow: hidden;
+  }
+  .compteur::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.10) 3px 4px);
+    opacity: .35;
+  }
+  .compteur .libelle { font-size: 11px; font-weight: 700; letter-spacing: .3em; color: var(--or); }
+  .compteur .euros {
+    font-family: 'IBM Plex Mono', monospace; font-weight: 600;
+    font-size: clamp(46px, 12vw, 84px); line-height: 1.1; margin-top: 8px;
+    color: var(--or-vif); text-shadow: 0 0 34px rgba(201,162,39,.35);
+    font-variant-numeric: tabular-nums;
+  }
+  .compteur .depuis { font-size: 12px; color: var(--gris); margin-top: 6px; }
+
+  /* ── Les cartes ──────────────────────────────────────────────── */
+  .cartes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
+  .carte {
+    background: var(--carte); border: 1px solid var(--ligne); border-radius: 16px;
+    padding: 14px 16px 12px;
+  }
+  .carte .v { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 26px; font-variant-numeric: tabular-nums; }
+  .carte .v.or { color: var(--or-vif); }
+  .carte .v.vert { color: var(--vert); }
+  .carte .l { font-size: 11px; color: var(--gris); margin-top: 3px; line-height: 1.35; }
+
+  /* ── Le graphe ───────────────────────────────────────────────── */
+  .bloc-graphe {
+    margin-top: 16px; background: var(--carte); border: 1px solid var(--ligne);
+    border-radius: 18px; padding: 16px 14px 8px;
+  }
+  .barre-choix { display: flex; gap: 6px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .choix { display: flex; gap: 6px; }
+  .choix button {
+    font: 600 12px 'Poppins', sans-serif; letter-spacing: .06em;
+    color: var(--gris); background: transparent; border: 1px solid var(--ligne);
+    border-radius: 999px; padding: 7px 16px; cursor: pointer; transition: all .18s;
+  }
+  .choix button.on { color: #14120D; background: var(--or); border-color: var(--or); }
+  .serie { font-size: 11px; color: var(--gris); }
+  .serie b { color: var(--or-vif); font-weight: 600; }
+  canvas { width: 100%; height: 260px; display: block; margin-top: 10px; }
+  .legende { display: flex; gap: 16px; font-size: 11px; color: var(--gris); padding: 8px 4px 6px; }
+  .pastille { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; vertical-align: baseline; }
+
+  .erreur { text-align: center; padding: 60px 20px; color: var(--gris); font-size: 14px; }
+  .pied { text-align: center; font-size: 11px; color: var(--gris); margin-top: 26px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="haut">
+    <div class="marque">H O R S E V O</div>
+    <div class="maj" id="maj">…</div>
+  </div>
+  <h1>L'argent, en direct.</h1>
+  <div class="sous">Chiffres officiels App Store, relevés chaque jour. Net encaissé, après TVA et commission Apple.</div>
+
+  <div id="contenu" class="erreur">Connexion aux chiffres…</div>
+</div>
+
+<script>
+const JETON = (location.hash || "").slice(1);
+const RPC = "https://dqvmnetwdjidykmqaujg.supabase.co/rest/v1/rpc/finances_stats";
+const CLE_ANON = "sb_publishable_xV_Q76hgY9MFzjUEeFyo0Q_P0JLm1yb";
+const NET_MENSUEL = 7.08;
+let donnees = null;
+let vue = "jour";
+
+const eur = (n) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+const eurCourt = (n) => n >= 1000 ? (n/1000).toLocaleString("fr-FR",{maximumFractionDigits:1}) + " k€" : Math.round(n) + " €";
+
+async function charger() {
+  try {
+    const r = await fetch(RPC, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: CLE_ANON, Authorization: "Bearer " + CLE_ANON },
+      body: JSON.stringify({ p_token: JETON }),
+    });
+    if (!r.ok) throw new Error(await r.text());
+    donnees = await r.json();
+    rendre();
+  } catch (e) {
+    document.getElementById("contenu").innerHTML =
+      '<div class="erreur">Accès refusé ou chiffres indisponibles.<br>Vérifie le lien complet (avec sa clé après le #).</div>';
+  }
+}
+
+function agreger(jours, mode) {
+  if (mode === "jour") return jours.slice(-31).map(j => ({ cle: j.jour.slice(5), eur: +j.eur, payants: j.payants, nouveaux: j.nouveaux }));
+  const g = new Map();
+  for (const j of jours) {
+    const cle = mode === "mois" ? j.jour.slice(0, 7) : j.jour.slice(0, 4);
+    const cur = g.get(cle) || { cle, eur: 0, payants: 0, nouveaux: 0 };
+    cur.eur += +j.eur; cur.payants = j.payants; cur.nouveaux += j.nouveaux;
+    g.set(cle, cur);
+  }
+  return [...g.values()];
+}
+
+function rendre() {
+  const d = donnees;
+  const jours = d.jours || [];
+  const dernier = jours[jours.length - 1] || { essais: 0, codes: 0, payants: 0, nouveaux: 0 };
+  const total = +d.total_eur;
+  const mrr = dernier.payants * NET_MENSUEL;
+  const maj = d.maj ? new Date(d.maj) : null;
+  document.getElementById("maj").textContent = maj
+    ? "relevé " + maj.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }) + " " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
+    : "";
+
+  document.getElementById("contenu").className = "";
+  document.getElementById("contenu").innerHTML = `
+    <div class="compteur">
+      <div class="libelle">NET ENCAISSÉ</div>
+      <div class="euros" id="gros">0,00 €</div>
+      <div class="depuis">depuis le lancement du 2 août 2026</div>
+    </div>
+    <div class="cartes">
+      <div class="carte"><div class="v or" id="cPayants">0</div><div class="l">abonnés qui paient aujourd'hui</div></div>
+      <div class="carte"><div class="v" id="cMrr">0 €</div><div class="l">revenu mensuel récurrent (× 7,08 € nets)</div></div>
+      <div class="carte"><div class="v" id="cEssais">0</div><div class="l">essais gratuits en cours</div></div>
+      <div class="carte"><div class="v" id="cCodes">0</div><div class="l">codes invités actifs</div></div>
+      <div class="carte"><div class="v vert" id="cNvx">0</div><div class="l">nouveaux essais (dernier jour relevé)</div></div>
+    </div>
+    <div class="bloc-graphe">
+      <div class="barre-choix">
+        <div class="choix">
+          <button data-v="jour">Jour</button>
+          <button data-v="mois">Mois</button>
+          <button data-v="an">Année</button>
+        </div>
+        <div class="serie" id="serie"></div>
+      </div>
+      <canvas id="graphe"></canvas>
+      <div class="legende">
+        <span><span class="pastille" style="background:var(--or-vif)"></span>encaissé (€)</span>
+        <span><span class="pastille" style="background:var(--vert)"></span>nouveaux essais</span>
+      </div>
+    </div>
+    <div class="pied">Les premières conversions payantes sont attendues à partir du 5 septembre, à la fin du premier mois offert. Cette page se met à jour toute seule.</div>
+  `;
+
+  animer("gros", total, (v) => eur(v));
+  document.getElementById("cPayants").textContent = dernier.payants;
+  document.getElementById("cMrr").textContent = eurCourt(mrr);
+  document.getElementById("cEssais").textContent = dernier.essais;
+  document.getElementById("cCodes").textContent = dernier.codes;
+  document.getElementById("cNvx").textContent = "+" + dernier.nouveaux;
+
+  document.querySelectorAll(".choix button").forEach((b) => {
+    b.classList.toggle("on", b.dataset.v === vue);
+    b.onclick = () => { vue = b.dataset.v; rendre(); };
+  });
+  dessiner(agreger(jours, vue === "an" ? "an" : vue));
+}
+
+function animer(id, cible, fmt) {
+  const el = document.getElementById(id);
+  const debut = performance.now(), duree = 1100;
+  (function pas(t) {
+    const p = Math.min(1, (t - debut) / duree);
+    el.textContent = fmt(cible * (1 - Math.pow(1 - p, 4)));
+    if (p < 1) requestAnimationFrame(pas);
+  })(debut);
+}
+
+function dessiner(pts) {
+  const cv = document.getElementById("graphe");
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth, H = 260;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const c = cv.getContext("2d");
+  c.scale(dpr, dpr);
+  c.clearRect(0, 0, W, H);
+  if (!pts.length) return;
+
+  const padG = 8, padD = 8, padH = 14, padB = 30;
+  const lw = W - padG - padD, lh = H - padH - padB;
+  const maxEur = Math.max(10, ...pts.map(p => p.eur));
+  const maxNvx = Math.max(4, ...pts.map(p => p.nouveaux));
+
+  // grille discrète
+  c.strokeStyle = "rgba(201,162,39,.09)"; c.lineWidth = 1;
+  for (let i = 1; i <= 3; i++) {
+    const y = padH + lh - (lh * i / 3);
+    c.beginPath(); c.moveTo(padG, y); c.lineTo(W - padD, y); c.stroke();
+  }
+
+  const n = pts.length;
+  const pas = lw / n;
+  const larg = Math.min(34, Math.max(4, pas * 0.55));
+
+  // barres € (or, dégradé + halo)
+  for (let i = 0; i < n; i++) {
+    const x = padG + pas * i + (pas - larg) / 2;
+    const h = Math.max(pts[i].eur > 0 ? 3 : 0, lh * pts[i].eur / maxEur);
+    const y = padH + lh - h;
+    if (h > 0) {
+      const g = c.createLinearGradient(0, y, 0, y + h);
+      g.addColorStop(0, "#E8C558"); g.addColorStop(1, "rgba(201,162,39,.25)");
+      c.fillStyle = g;
+      c.beginPath();
+      c.roundRect(x, y, larg, h, [3, 3, 0, 0]);
+      c.fill();
+    } else {
+      c.fillStyle = "rgba(201,162,39,.18)";
+      c.fillRect(x, padH + lh - 1.5, larg, 1.5);
+    }
+  }
+
+  // ligne des nouveaux essais (vert doux)
+  c.strokeStyle = "#7DD8A0"; c.lineWidth = 1.6;
+  c.beginPath();
+  for (let i = 0; i < n; i++) {
+    const x = padG + pas * i + pas / 2;
+    const y = padH + lh - lh * pts[i].nouveaux / maxNvx;
+    i ? c.lineTo(x, y) : c.moveTo(x, y);
+  }
+  c.stroke();
+  c.fillStyle = "#7DD8A0";
+  for (let i = 0; i < n; i++) {
+    const x = padG + pas * i + pas / 2;
+    const y = padH + lh - lh * pts[i].nouveaux / maxNvx;
+    c.beginPath(); c.arc(x, y, 2.1, 0, 7); c.fill();
+  }
+
+  // étiquettes d'axe (clairsemées)
+  c.fillStyle = "rgba(154,145,124,.9)";
+  c.font = "10px 'IBM Plex Mono', monospace";
+  c.textAlign = "center";
+  const saut = Math.ceil(n / 8);
+  for (let i = 0; i < n; i += saut) {
+    c.fillText(pts[i].cle, padG + pas * i + pas / 2, H - 12);
+  }
+
+  const totalVue = pts.reduce((a, p) => a + p.eur, 0);
+  document.getElementById("serie").innerHTML =
+    `${n} ${vue === "jour" ? "jours" : vue === "mois" ? "mois" : "années"} · <b>${eurCourt(totalVue)}</b> encaissés sur la vue`;
+}
+
+charger();
+setInterval(charger, 5 * 60 * 1000);
+</script>
+</body>
+</html>
