@@ -4,499 +4,170 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Horsevo · Le registre</title>
-<!-- Typo « style Apple » : San Francisco, la police système -->
+<title>Horsevo · L'argent</title>
 <style>
-  :root {
-    --fond: #0C0A07;
-    --encre: #F1EADA;
-    --or: #C9A227;
-    --or-vif: #E9C761;
-    --gris: #8F8672;
-    --vert: #8FD9AC;
-    --filet: rgba(201, 162, 39, .22);
-    --filet-doux: rgba(241, 234, 218, .10);
-  }
-  * { margin: 0; box-sizing: border-box; }
-  body {
-    background: var(--fond);
-    color: var(--encre);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
-    font-feature-settings: "tnum";
-    min-height: 100vh;
-    padding: 20px 18px calc(40px + env(safe-area-inset-bottom));
-  }
-  .page { max-width: 840px; margin: 0 auto; }
-
-  /* ── Manchette ───────────────────────────────────────────────── */
-  .manchette {
-    display: flex; justify-content: space-between; align-items: baseline;
-    border-bottom: 2px solid var(--filet); padding-bottom: 12px;
-  }
-  .titre-maison { font-size: 11px; letter-spacing: .5em; color: var(--or); }
-  .horloge { font-size: 12px; font-weight: 500; color: var(--gris); font-variant-numeric: tabular-nums; }
-  .horloge .sec { color: var(--or-vif); }
-  .date-ligne { font-size: 14px; color: var(--gris); margin-top: 12px; font-weight: 500; }
-
-  h1 {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
-    font-weight: 700; letter-spacing: -0.025em;
-    font-size: clamp(38px, 9vw, 62px); margin-top: 4px;
-  }
-
-  /* ── Le montant + le rebours, asymétriques ───────────────────── */
-  .scene { display: grid; grid-template-columns: 1.5fr 1fr; gap: 26px; margin-top: 30px; align-items: end; }
-  @media (max-width: 640px) { .scene { grid-template-columns: 1fr; } }
-
-  .montant .etiquette { font-size: 10.5px; letter-spacing: .34em; color: var(--or); }
-  .volets { display: flex; gap: 5px; margin-top: 12px; flex-wrap: wrap; }
-  .volet {
-    display: inline-block; min-width: .72em; text-align: center;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
-    font-weight: 600; letter-spacing: -0.02em;
-    font-size: clamp(40px, 9.6vw, 74px); line-height: 1.18;
-    color: var(--or-vif); background: rgba(241, 234, 218, .045);
-    border-bottom: 2px solid rgba(201, 162, 39, .35);
-    border-radius: 6px; padding: 2px 4px 0;
-    font-variant-numeric: tabular-nums;
-  }
-  .volet.signe { background: transparent; border-bottom-color: transparent; color: var(--or); }
-  .montant .phrase { font-size: 13.5px; color: var(--gris); margin-top: 14px; max-width: 44ch; line-height: 1.55; }
-  .montant .phrase b { color: var(--encre); font-weight: 400; }
-
-  .rebours { border-left: 1px solid var(--filet-doux); padding-left: 22px; }
-  @media (max-width: 640px) { .rebours { border-left: none; padding-left: 0; border-top: 1px solid var(--filet-doux); padding-top: 18px; } }
-  .rebours .grand {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
-    font-weight: 700; letter-spacing: -0.02em;
-    font-size: clamp(40px, 8vw, 58px); color: var(--encre); line-height: 1;
-  }
-  .rebours .grand .battement { display: inline-block; animation: bat 1.6s ease-in-out infinite; transform-origin: 50% 60%; }
-  @keyframes bat { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.06); } 24% { transform: scale(1); } }
-  .rebours .expl { font-size: 13px; color: var(--gris); margin-top: 10px; line-height: 1.55; }
-
-  /* ── Le registre (points de conduite) ────────────────────────── */
-  .section-titre {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin: 42px 0 4px; border-bottom: 1px solid var(--filet); padding-bottom: 8px;
-  }
-  .section-titre h2 {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
-    font-weight: 700; letter-spacing: -0.015em; font-size: 21px;
-  }
-  .section-titre .apostille { font-size: 12.5px; color: var(--gris); }
-
-  .registre { margin-top: 8px; }
-  .ligne {
-    display: flex; align-items: baseline; gap: 10px;
-    padding: 11px 0; font-size: 14px;
-  }
-  .ligne + .ligne { border-top: 1px dashed rgba(241, 234, 218, .05); }
-  .ligne .quoi { color: var(--encre); }
-  .ligne .points { flex: 1; border-bottom: 1px dotted rgba(241, 234, 218, .22); transform: translateY(-4px); }
-  .ligne .val { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--or-vif); }
-  .ligne .val.vert { color: var(--vert); }
-  .ligne .val.neutre { color: var(--encre); }
-  .ligne .detail { font-size: 11px; color: var(--gris); }
-
-  /* ── La route (le cap) ───────────────────────────────────────── */
-  .route { margin-top: 10px; position: relative; padding: 26px 0 6px; }
-  .rail { height: 2px; background: var(--filet-doux); position: relative; }
-  .rail .granule { position: absolute; top: -3px; width: 1px; height: 8px; background: rgba(241,234,218,.18); }
-  .rail .fait {
-    position: absolute; left: 0; top: -1px; height: 4px; width: 0%;
-    background: linear-gradient(90deg, rgba(201,162,39,.5), var(--or-vif));
-    transition: width 1.8s cubic-bezier(.2, .7, .15, 1);
-  }
-  .rail .curseur {
-    position: absolute; top: 50%; left: 0%; transform: translate(-50%, -50%);
-    width: 11px; height: 11px; border-radius: 50%;
-    background: var(--or-vif); box-shadow: 0 0 0 3px rgba(201,162,39,.18);
-    animation: pouls 2.2s ease-out infinite;
-    transition: left 1.8s cubic-bezier(.2, .7, .15, 1);
-  }
-  @keyframes pouls { 0% { box-shadow: 0 0 0 3px rgba(201,162,39,.22); } 60% { box-shadow: 0 0 0 10px rgba(201,162,39,0); } 100% { box-shadow: 0 0 0 3px rgba(201,162,39,0); } }
-  .route .reperes { display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: var(--gris); }
-  .route .reperes b { color: var(--encre); font-weight: 500; display: block; font-size: 13px; }
-  .route .reperes .fin { text-align: right; }
-  .route .apres { font-size: 13px; color: var(--gris); margin-top: 16px; line-height: 1.6; }
-  .route .apres b { color: var(--or-vif); font-weight: 400; }
-
-  /* ── Le mouvement (graphe) ───────────────────────────────────── */
-  .choix { display: flex; gap: 18px; }
-  .choix button {
-    font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: .1em;
-    color: var(--gris); background: none; border: none; padding: 4px 0;
-    border-bottom: 2px solid transparent; cursor: pointer; transition: all .2s;
-  }
-  .choix button.on { color: var(--or-vif); border-bottom-color: var(--or); }
-  .graphe-cadre { position: relative; margin-top: 14px; }
-  canvas { width: 100%; height: 250px; display: block; }
-  .point-vif {
-    position: absolute; width: 8px; height: 8px; border-radius: 50%;
-    background: var(--vert); transform: translate(-50%, -50%);
-    animation: pouls 1.8s ease-out infinite; pointer-events: none;
-  }
-  .legende { display: flex; gap: 20px; font-size: 11px; color: var(--gris); margin-top: 10px; }
-  .trait { display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 7px; }
-
-  .colophon {
-    margin-top: 46px; border-top: 2px solid var(--filet); padding-top: 14px;
-    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-    font-size: 11px; color: var(--gris);
-  }
-  .colophon i { font-style: normal; font-size: 11.5px; }
-
-  .erreur { text-align: center; padding: 80px 20px; color: var(--gris); font-size: 13px; }
-
-  .note { font-size: 12px; color: var(--gris); margin-top: 12px; line-height: 1.55; }
-  .note b { color: var(--encre); font-weight: 500; }
-  .jours { width: 100%; border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; font-size: 13.5px; }
-  .jours th { text-align: right; font-weight: 500; color: var(--gris); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; padding: 6px 0; }
-  .jours th:first-child, .jours td:first-child { text-align: left; }
-  .jours td { text-align: right; padding: 9px 0; border-top: 1px dashed rgba(241, 234, 218, .07); color: var(--encre); }
-  .jours td.eur { color: var(--or-vif); font-weight: 600; }
-  .jours td.vert { color: var(--vert); }
-  .jours td.jour { text-transform: capitalize; }
-  .jours tr.total td { border-top: 1px solid rgba(241, 234, 218, .25); font-weight: 600; }
-  @media (prefers-reduced-motion: reduce) {
-    .battement, .curseur, .point-vif { animation: none !important; }
-  }
+  :root { --fond:#0B0A08; --carte:#15130E; --bord:rgba(241,234,218,.09); --encre:#F1EADA; --gris:#9A917C; --or:#C9A227; --or-vif:#E9C761; --vert:#8FD9AC; }
+  * { margin:0; box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body { background:var(--fond); color:var(--encre); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",sans-serif; font-variant-numeric:tabular-nums; padding:18px 16px calc(36px + env(safe-area-inset-bottom)); line-height:1.4; }
+  .page { max-width:640px; margin:0 auto; }
+  .haut { display:flex; justify-content:space-between; align-items:baseline; font-size:12px; color:var(--gris); }
+  .haut b { color:var(--or); letter-spacing:.42em; font-weight:600; font-size:11px; }
+  h1 { font-size:clamp(28px,7vw,40px); font-weight:800; letter-spacing:-.02em; margin:14px 0 2px; line-height:1.05; }
+  .sous { font-size:14px; color:var(--gris); }
+  .carte { background:var(--carte); border:1px solid var(--bord); border-radius:20px; padding:18px 18px 16px; margin-top:14px; }
+  .carte.or { border-color:rgba(201,162,39,.35); }
+  .etiq { font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--or); font-weight:700; }
+  .grand { font-size:clamp(40px,12vw,60px); font-weight:800; letter-spacing:-.03em; line-height:1.05; margin-top:8px; color:var(--or-vif); word-break:keep-all; white-space:nowrap; }
+  .grand small { font-size:.5em; font-weight:700; letter-spacing:0; margin-left:4px; color:var(--or); }
+  .expl { font-size:14px; color:var(--gris); margin-top:10px; line-height:1.5; }
+  .expl b { color:var(--encre); font-weight:600; }
+  .ligne { display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:10px 0; border-top:1px solid var(--bord); font-size:15px; }
+  .ligne:first-of-type { border-top:0; }
+  .ligne .k { color:var(--gris); }
+  .ligne .v { font-weight:700; color:var(--encre); white-space:nowrap; }
+  .ligne .v.or { color:var(--or-vif); }
+  .tuiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .tuile { background:rgba(241,234,218,.04); border:1px solid var(--bord); border-radius:14px; padding:12px 12px 10px; }
+  .tuile .n { font-size:26px; font-weight:800; letter-spacing:-.02em; line-height:1.1; white-space:nowrap; }
+  .tuile .n.eur { font-size:22px; }
+  .tuile .n.or { color:var(--or-vif); } .tuile .n.vert { color:var(--vert); }
+  .tuile .l { font-size:12px; color:var(--gris); margin-top:4px; line-height:1.3; }
+  .tab { width:100%; border-collapse:collapse; margin-top:10px; font-size:13.5px; }
+  @media (max-width:420px) { .tab { font-size:12.5px; } .tab th { font-size:10px; letter-spacing:.02em; } .tab td { padding:8px 0; } }
+  .tab th { text-align:right; font-weight:600; color:var(--gris); font-size:11px; letter-spacing:.04em; text-transform:uppercase; padding:6px 0 8px; }
+  .tab th:first-child, .tab td:first-child { text-align:left; }
+  .tab td { text-align:right; padding:9px 0; border-top:1px solid var(--bord); white-space:nowrap; }
+  .tab td.or { color:var(--or-vif); font-weight:700; } .tab td.vert { color:var(--vert); font-weight:600; } .tab td.mut { color:var(--gris); }
+  .tab tr.total td { border-top:2px solid rgba(241,234,218,.25); font-weight:800; }
+  .tab-cadre { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 -6px; padding:0 6px; }
+  .puce { display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:700; background:rgba(143,217,172,.12); color:var(--vert); margin-left:8px; vertical-align:middle; }
+  .puce.attente { background:rgba(201,162,39,.14); color:var(--or-vif); }
+  .lire p { font-size:13.5px; color:var(--gris); margin-top:8px; line-height:1.55; }
+  .lire p b { color:var(--encre); font-weight:600; }
+  .pied { margin-top:22px; font-size:12px; color:var(--gris); text-align:center; line-height:1.6; }
+  .erreur { text-align:center; padding:70px 20px; color:var(--gris); font-size:14px; }
+  @media (min-width:560px) { .tuiles { grid-template-columns:repeat(4,1fr); } }
 </style>
 </head>
 <body>
 <div class="page">
-  <div class="manchette">
-    <div class="titre-maison">H O R S E V O</div>
-    <div class="horloge" id="horloge">--:--:--</div>
-  </div>
-  <h1>Le registre.</h1>
-  <div class="date-ligne" id="dateLigne">…</div>
-
-  <div id="contenu" class="erreur">Ouverture du registre…</div>
+  <div class="haut"><b>HORSEVO</b><span id="horloge">--:--</span></div>
+  <h1>L'argent, en clair.</h1>
+  <div class="sous" id="dateLigne">…</div>
+  <div id="contenu" class="erreur">Chargement…</div>
 </div>
-
 <script>
 const JETON = (location.hash || "").slice(1);
 const RPC = "https://dqvmnetwdjidykmqaujg.supabase.co/rest/v1/rpc/finances_stats";
 const CLE_ANON = "sb_publishable_xV_Q76hgY9MFzjUEeFyo0Q_P0JLm1yb";
-const NET_MENSUEL = 7.08;
-const SEUIL = 350;
-const JOUR_VERITE = new Date("2026-09-05T00:00:00+02:00");
-let donnees = null;
-let vue = "jour";
+const NET_MENSUEL = 7.08;            // ce qu'Apple reverse sur un abonnement à 9,99 € (TVA puis commission retirées)
+// Mois fiscaux Apple (semaines de 4 ou 5, fin le samedi) et versement ~5 semaines après la clôture.
+const MOIS_FISCAUX = [
+  { nom: "août",      debut: "2026-08-02", fin: "2026-08-29", versement: "2026-10-01" },
+  { nom: "septembre", debut: "2026-08-30", fin: "2026-09-26", versement: "2026-11-05" },
+  { nom: "octobre",   debut: "2026-09-27", fin: "2026-10-31", versement: "2026-12-03" },
+  { nom: "novembre",  debut: "2026-11-01", fin: "2026-11-28", versement: "2027-01-07" },
+  { nom: "décembre",  debut: "2026-11-29", fin: "2027-01-02", versement: "2027-02-04" },
+];
+const eur2 = (n) => (+n).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+const dJ = (iso, o) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", o);
+const majuscule = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+const PAYE = /^(Paid Subscription|Renewal|Reactivation)/;
 
-/* Horloge vivante : la page bat la seconde, comme une salle des marchés. */
-function tictac() {
-  const n = new Date();
-  const hh = String(n.getHours()).padStart(2, "0");
-  const mm = String(n.getMinutes()).padStart(2, "0");
-  const ss = String(n.getSeconds()).padStart(2, "0");
-  document.getElementById("horloge").innerHTML = `${hh}:${mm}<span class="sec">:${ss}</span>`;
-}
-tictac(); setInterval(tictac, 1000);
-
-function majDateLigne() {
-  const n = new Date();
-  const jPlus = Math.floor((n - new Date("2026-08-02T00:00:00+02:00")) / 86400000);
-  const date = n.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-  document.getElementById("dateLigne").textContent =
-    date.charAt(0).toUpperCase() + date.slice(1) + " · " + jPlus + "ᵉ jour depuis le lancement";
-}
-majDateLigne();
-
-const eur2 = (n) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const dateLongue = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
-const dateCourte = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
-const eurCourt = (n) => n >= 1000 ? (n / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 }) + " k€" : Math.round(n) + " €";
+function tictac() { const n = new Date(); document.getElementById("horloge").textContent = n.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); }
+tictac(); setInterval(tictac, 15000);
+(function () {
+  const n = new Date(); const j = Math.floor((n - new Date("2026-08-02T00:00:00+02:00")) / 86400000);
+  document.getElementById("dateLigne").textContent = majuscule(n.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })) + " · " + j + "ᵉ jour depuis le lancement";
+})();
 
 async function charger() {
   try {
-    const r = await fetch(RPC, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", apikey: CLE_ANON, Authorization: "Bearer " + CLE_ANON },
-      body: JSON.stringify({ p_token: JETON }),
-    });
+    const r = await fetch(RPC, { method: "POST", headers: { "Content-Type": "application/json", apikey: CLE_ANON, Authorization: "Bearer " + CLE_ANON }, body: JSON.stringify({ p_token: JETON }) });
     if (!r.ok) throw new Error(await r.text());
-    donnees = await r.json();
-    rendre();
+    rendre(await r.json());
   } catch (e) {
-    document.getElementById("contenu").innerHTML =
-      '<div class="erreur">Le registre ne s\'ouvre pas.<br>Vérifie le lien complet, avec sa clé après le #.</div>';
+    document.getElementById("contenu").innerHTML = '<div class="erreur">La page ne s\'ouvre pas.<br>Vérifie le lien complet, avec sa clé après le #.</div>';
   }
 }
 
-/* Chiffres à VOLETS : chaque chiffre roule comme un tableau d'affichage
-   de gare ou d'hippodrome avant de se poser. */
-function poserVolets(conteneur, texte) {
-  conteneur.innerHTML = "";
-  [...texte].forEach((ch, i) => {
-    const v = document.createElement("span");
-    const estChiffre = /[0-9]/.test(ch);
-    v.className = "volet" + (estChiffre ? "" : " signe");
-    v.textContent = estChiffre ? "0" : ch;
-    conteneur.appendChild(v);
-    if (estChiffre) {
-      const cible = Number(ch);
-      let tours = 8 + i * 3 + cible;
-      const roule = setInterval(() => {
-        v.textContent = String((Number(v.textContent) + 1) % 10);
-        if (--tours <= 0) { v.textContent = String(cible); clearInterval(roule); }
-      }, 55 + i * 6);
-    }
-  });
-}
-
-function agreger(jours, mode) {
-  if (mode === "jour") return jours.slice(-31).map(j => ({ cle: j.jour.slice(8) + "/" + j.jour.slice(5, 7), eur: +j.eur, nouveaux: j.nouveaux }));
-  const g = new Map();
-  for (const j of jours) {
-    const cle = mode === "mois" ? j.jour.slice(5, 7) + "/" + j.jour.slice(2, 4) : j.jour.slice(0, 4);
-    const cur = g.get(cle) || { cle, eur: 0, nouveaux: 0 };
-    cur.eur += +j.eur; cur.nouveaux += j.nouveaux;
-    g.set(cle, cur);
-  }
-  return [...g.values()];
-}
-
-function rendre() {
-  const d = donnees;
-  const jours = d.jours || [];
-  const dernier = jours[jours.length - 1] || { essais: 0, codes: 0, payants: 0, nouveaux: 0 };
+function rendre(d) {
+  const jours = (d.jours || []).slice().sort((a, b) => a.jour.localeCompare(b.jour));
+  const dernier = jours[jours.length - 1] || { jour: null, essais: 0, codes: 0, payants: 0, nouveaux: 0, eur: 0 };
   const total = +d.total_eur;
-  const mrr = dernier.payants * NET_MENSUEL;
-  const enSelle = dernier.essais + dernier.codes + dernier.payants;
   const maj = d.maj ? new Date(d.maj) : null;
+  const auj = new Date().toISOString().slice(0, 10);
 
-  const joursRestants = Math.ceil((JOUR_VERITE - new Date()) / 86400000);
-  const rebours = joursRestants > 0
-    ? `<div class="grand">J<span class="battement">−${joursRestants}</span></div>
-       <div class="expl">avant les premiers paiements : le mois offert de la grande vague du 4 août se referme le 5 septembre. Ensuite, chaque matin comptera.</div>`
-    : dernier.payants > 0
-      ? `<div class="grand"><span class="battement">${dernier.payants}</span></div>
-         <div class="expl">${dernier.payants > 1 ? "cavaliers paient" : "cavalier paie"} désormais chaque mois. La conversion est ouverte, le registre s'écrit.</div>`
-      : `<div class="grand"><span class="battement">Ouvert</span></div>
-         <div class="expl">le temps des conversions a commencé : les premiers paiements peuvent tomber chaque matin, ils s'inscriront ici.</div>`;
+  // Mois fiscal en cours et ce qu'il contient déjà
+  const mois = MOIS_FISCAUX.find((m) => auj >= m.debut && auj <= m.fin) || MOIS_FISCAUX[MOIS_FISCAUX.length - 1];
+  const dansMois = jours.filter((j) => j.jour >= mois.debut && j.jour <= mois.fin);
+  const netMois = dansMois.reduce((a, j) => a + (+j.eur), 0);
+  const devises = {};
+  for (const j of jours) for (const [dev, v] of Object.entries(j.devises || {})) devises[dev] = (devises[dev] || 0) + (+v);
+  const horsEur = Object.entries(devises).filter(([dev, v]) => dev !== "EUR" && v > 0);
+  const eurExact = devises.EUR || 0;
+  const paiesDuJour = (j) => Object.entries(j.evenements || {}).filter(([k]) => PAYE.test(k)).reduce((a, [, n]) => a + (+n), 0);
+  const totalPayes = jours.reduce((a, j) => a + paiesDuJour(j), 0);
+  const mrr = dernier.payants * NET_MENSUEL;
+  const versementLong = majuscule(dJ(mois.versement, { weekday: "long", day: "numeric", month: "long" }));
+  const finMois = dJ(mois.fin, { day: "numeric", month: "long" });
+  const debutMois = dJ(mois.debut, { day: "numeric", month: "long" });
+
+  const quatorze = jours.slice(-14).reverse();
+  const totQ = quatorze.reduce((a, j) => ({ eur: a.eur + (+j.eur), payes: a.payes + paiesDuJour(j), nouveaux: a.nouveaux + (j.nouveaux || 0) }), { eur: 0, payes: 0, nouveaux: 0 });
 
   document.getElementById("contenu").className = "";
   document.getElementById("contenu").innerHTML = `
-    <div class="scene">
-      <div class="montant">
-        <div class="etiquette">NET ENCAISSÉ</div>
-        <div class="volets" id="volets"></div>
-        <div class="phrase">Tout ce que l'App Store a versé depuis le 2 août, <b>TVA et commission déjà retirées</b> : l'argent vraiment gagné, à l'euro près.</div>
-        <div class="phrase" id="derniereJournee"></div>
+    <div class="carte or">
+      <div class="etiq">Ce qu'Apple te doit aujourd'hui</div>
+      <div class="grand">${eur2(total)}</div>
+      <div class="expl">Encaissé <b>net</b> depuis le lancement, TVA et commission Apple déjà retirées : c'est la somme qui arrivera sur le compte, pas le chiffre d'affaires.</div>
+      <div class="ligne" style="margin-top:12px"><span class="k">Dernière journée comptée</span><span class="v">${dernier.jour ? majuscule(dJ(dernier.jour, { weekday: "long", day: "numeric", month: "long" })) : "—"}</span></div>
+      <div class="ligne"><span class="k">Encaissé ce jour-là</span><span class="v or">${eur2(dernier.eur)}</span></div>
+      <div class="ligne"><span class="k">Personnes passées au payant depuis le début</span><span class="v">${totalPayes}</span></div>
+    </div>
+
+    <div class="carte">
+      <div class="etiq">Prochain virement d'Apple</div>
+      <div class="grand" style="font-size:clamp(26px,7.5vw,40px);color:var(--encre)">${versementLong}</div>
+      <div class="expl"><b>${eur2(netMois)} à ce jour</b>, sur le compte de MACOMCHEZDYS. C'est le mois fiscal Apple de ${mois.nom}, du ${debutMois} au ${finMois} : le montant grandit chaque jour jusqu'au ${finMois}, puis Apple le fige et le verse cinq semaines plus tard.</div>
+      <div class="expl">${horsEur.length ? `Dedans, <b>${horsEur.map(([dev, v]) => v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + dev).join(", ")}</b> encaissés en devises et convertis ici à un cours fixe : le virement réel pourra différer de quelques euros sur cette part. La part en euros, <b>${eur2(eurExact)}</b>, est exacte.` : "Tout est encaissé en euros : le montant est exact."}</div>
+    </div>
+
+    <div class="carte">
+      <div class="etiq">Où on en est</div>
+      <div class="tuiles">
+        <div class="tuile"><div class="n or">${dernier.payants}</div><div class="l">abonnés qui paient chaque mois</div></div>
+        <div class="tuile"><div class="n eur">${eur2(mrr).replace(",00", "")}</div><div class="l">net attendu chaque mois s'ils restent (${dernier.payants} × ${NET_MENSUEL.toLocaleString("fr-FR")} €)</div></div>
+        <div class="tuile"><div class="n">${dernier.essais}</div><div class="l">en essai gratuit, décision dans les jours qui viennent</div></div>
+        <div class="tuile"><div class="n">${dernier.codes}</div><div class="l">codes invités actifs (gratuits)</div></div>
       </div>
-      <div class="rebours">${rebours}</div>
+      <div class="expl" style="margin-top:12px">Sur les <b>${dernier.essais + dernier.codes + dernier.payants}</b> personnes qui ont l'app ouverte aujourd'hui, <b>${dernier.payants}</b> paient. Nouveaux essais au dernier relevé : <b>+${dernier.nouveaux}</b>.</div>
     </div>
 
-    <div class="section-titre">
-      <h2>Le registre du jour</h2>
-      <div class="apostille" id="apostille"></div>
-    </div>
-    <div class="registre">
-      <div class="ligne"><span class="quoi">Cavaliers en selle</span><span class="points"></span><span class="detail">essai, code ou abonnement</span><span class="val neutre" id="rSelle">0</span></div>
-      <div class="ligne"><span class="quoi">Essais gratuits en cours</span><span class="points"></span><span class="val" id="rEssais">0</span></div>
-      <div class="ligne"><span class="quoi">Codes invités actifs</span><span class="points"></span><span class="val" id="rCodes">0</span></div>
-      <div class="ligne"><span class="quoi">Abonnés payants</span><span class="points"></span><span class="val" id="rPayants">0</span></div>
-      <div class="ligne"><span class="quoi">Revenu mensuel récurrent</span><span class="points"></span><span class="val" id="rMrr">0 €</span></div>
-      <div class="ligne"><span class="quoi">Nouveaux essais au dernier relevé</span><span class="points"></span><span class="val vert" id="rNvx">+0</span></div>
-    </div>
-    <div class="note" id="noteRegistre"></div>
-
-    <div class="section-titre">
-      <h2>La route</h2>
-      <div class="apostille">premier cap : ${SEUIL} abonnés, le salaire du fondateur</div>
-    </div>
-    <div class="route">
-      <div class="rail" id="rail">
-        <div class="fait" id="fait"></div>
-        <div class="curseur" id="curseur"></div>
-      </div>
-      <div class="reperes">
-        <div><b>0</b>le départ</div>
-        <div class="fin"><b>${SEUIL} abonnés</b>2 500 € nets par mois</div>
-      </div>
-      <div class="apres">Après ce cap, la route continue : <b>907</b> à la fin de l'année si la trajectoire tient, <b>10 000</b> à l'horizon du marché européen. Chaque cavalier converti vaut <b>118 €</b> sur sa durée de vie.</div>
+    <div class="carte">
+      <div class="etiq">Jour par jour, les 14 derniers</div>
+      <div class="tab-cadre"><table class="tab">
+        <thead><tr><th>Jour</th><th>Encaissé</th><th>Nouv. payants</th><th>Total payants</th><th>Essais</th></tr></thead>
+        <tbody>
+          ${quatorze.map((j) => `<tr><td>${majuscule(dJ(j.jour, { weekday: "short", day: "numeric", month: "short" }))}</td><td class="${+j.eur > 0 ? "or" : "mut"}">${eur2(j.eur)}</td><td class="${paiesDuJour(j) > 0 ? "vert" : "mut"}">${paiesDuJour(j) > 0 ? "+" + paiesDuJour(j) : "0"}</td><td>${j.payants}</td><td class="mut">+${j.nouveaux || 0}</td></tr>`).join("")}
+          <tr class="total"><td>14 jours</td><td class="or">${eur2(totQ.eur)}</td><td class="vert">+${totQ.payes}</td><td></td><td class="mut">+${totQ.nouveaux}</td></tr>
+        </tbody>
+      </table></div>
     </div>
 
-    <div class="section-titre">
-      <h2>Le mouvement</h2>
-      <div class="choix">
-        <button data-v="jour">JOUR</button>
-        <button data-v="mois">MOIS</button>
-        <button data-v="an">ANNÉE</button>
-      </div>
-    </div>
-    <div class="graphe-cadre">
-      <canvas id="graphe"></canvas>
-      <div class="point-vif" id="pointVif" hidden></div>
-    </div>
-    <div class="legende">
-      <span><span class="trait" style="background:var(--or-vif)"></span>encaissé (€, axe de gauche)</span>
-      <span><span class="trait" style="background:var(--vert)"></span>nouveaux essais (courbe, échelle à part)</span>
+    <div class="carte lire">
+      <div class="etiq">Comment lire cette page</div>
+      <p><b>Net</b> veut dire après la TVA et la commission d'Apple. Sur un abonnement à 9,99 €, il reste ${NET_MENSUEL.toLocaleString("fr-FR")} €.</p>
+      <p><b>Un jour de retard, toujours.</b> Apple publie les ventes d'une journée le lendemain vers 16 h 15 : la ligne d'aujourd'hui apparaîtra demain. Le nombre d'abonnés payants arrive un peu plus tard dans la soirée.</p>
+      <p><b>Le virement.</b> Apple compte par mois fiscaux qui se terminent un samedi, puis verse dans les 45 jours. Le premier virement, celui du mois de ${mois.nom}, est attendu le ${versementLong.toLowerCase()}. Le montant devient définitif quand Apple publie son rapport financier, quelques jours après le ${finMois} : cette page l'affichera alors tel quel.</p>
     </div>
 
-    <div class="section-titre">
-      <h2>Les 7 derniers jours</h2>
-      <div class="apostille">à l'euro près, tel qu'Apple l'écrit</div>
-    </div>
-    <table class="jours">
-      <thead><tr><th>Jour</th><th>Encaissé</th><th>Payants</th><th>Essais</th><th>Nouveaux</th></tr></thead>
-      <tbody id="tbJours"></tbody>
-    </table>
-
-    <div class="colophon">
-      <span><i>Écrit tout seul, chaque matin, depuis les registres officiels d'Apple.</i></span>
-      <span id="releve"></span>
-    </div>
+    <div class="pied">Écrit tout seul depuis les rapports officiels d'Apple.<br>${maj ? "Dernier relevé le " + maj.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " à " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : ""}</div>
   `;
-
-  poserVolets(document.getElementById("volets"), eur2(total) + " €");
-  document.getElementById("apostille").textContent = dernier.essais > 0 || dernier.payants > 0
-    ? enSelle + " cavaliers tiennent les rênes en ce moment" : "";
-  document.getElementById("releve").textContent = maj
-    ? "Dernier relevé : " + maj.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }) + " à " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
-    : "";
-
-  if (dernier.jour) {
-    document.getElementById("derniereJournee").innerHTML =
-      "Dernière journée inscrite : <b>" + dateLongue(dernier.jour) + "</b>, <b>" + eur2(+dernier.eur) + " €</b> encaissés ce jour-là." +
-      (maj ? " Inscrite au relevé du " + maj.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " à " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) + "." : "");
-    document.getElementById("noteRegistre").innerHTML =
-      "Chiffres arrêtés au <b>" + dateLongue(dernier.jour) + "</b>. Apple publie les ventes d'une journée le lendemain (relevé de 16 h 15) et les abonnements un peu plus tard (relevé de 22 h 15) : les abonnés payants peuvent être ceux de la veille jusqu'au soir.";
-  }
-  const sept = jours.slice(-7).reverse();
-  const tot = sept.reduce((a, j) => ({ eur: a.eur + (+j.eur), nouveaux: a.nouveaux + (j.nouveaux || 0) }), { eur: 0, nouveaux: 0 });
-  document.getElementById("tbJours").innerHTML = sept.map((j) =>
-    "<tr><td class=\"jour\">" + dateCourte(j.jour) + "</td><td class=\"eur\">" + eur2(+j.eur) + " €</td><td>" + (j.payants ?? "") + "</td><td>" + (j.essais ?? "") + "</td><td class=\"vert\">+" + (j.nouveaux || 0) + "</td></tr>").join("") +
-    "<tr class=\"total\"><td>7 jours</td><td class=\"eur\">" + eur2(tot.eur) + " €</td><td></td><td></td><td class=\"vert\">+" + tot.nouveaux + "</td></tr>";
-  compte("rSelle", enSelle);
-  compte("rEssais", dernier.essais);
-  compte("rCodes", dernier.codes);
-  compte("rPayants", dernier.payants);
-  document.getElementById("rMrr").textContent = eurCourt(mrr);
-  document.getElementById("rNvx").textContent = "+" + dernier.nouveaux;
-
-  const pct = Math.min(100, dernier.payants / SEUIL * 100);
-  const rail = document.getElementById("rail");
-  for (let i = 1; i < 7; i++) {
-    const g = document.createElement("div");
-    g.className = "granule"; g.style.left = (i * 100 / 7) + "%";
-    rail.appendChild(g);
-  }
-  requestAnimationFrame(() => {
-    document.getElementById("fait").style.width = pct + "%";
-    document.getElementById("curseur").style.left = pct + "%";
-  });
-
-  document.querySelectorAll(".choix button").forEach((b) => {
-    b.classList.toggle("on", b.dataset.v === vue);
-    b.onclick = () => { vue = b.dataset.v; rendre(); };
-  });
-  requestAnimationFrame(() => dessiner(agreger(jours, vue === "an" ? "an" : vue)));
 }
-
-function compte(id, cible) {
-  const el = document.getElementById(id);
-  const debut = performance.now(), duree = 1200;
-  (function pas(t) {
-    const p = Math.min(1, (t - debut) / duree);
-    el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 4)));
-    if (p < 1) requestAnimationFrame(pas);
-  })(debut);
-}
-
-let animGraphe = 0;
-function dessiner(pts) {
-  const cv = document.getElementById("graphe");
-  const vif = document.getElementById("pointVif");
-  const dpr = window.devicePixelRatio || 1;
-  const W = cv.clientWidth || cv.parentElement?.clientWidth || 660, H = 250;
-  cv.width = W * dpr; cv.height = H * dpr;
-  const c = cv.getContext("2d");
-  const monAnim = ++animGraphe;
-  const debut = performance.now(), duree = 850;
-  vif.hidden = true;
-
-  const padG = 46, padD = 10, padH = 16, padB = 30;
-  const lw = W - padG - padD, lh = H - padH - padB;
-  const maxEur = Math.max(10, ...pts.map(p => p.eur));
-  const maxNvx = Math.max(4, ...pts.map(p => p.nouveaux));
-  const n = pts.length;
-  const pas = lw / n;
-  const larg = Math.min(30, Math.max(3, pas * 0.5));
-  const px = (i) => padG + pas * i + pas / 2;
-  const py = (i) => padH + lh - lh * pts[i].nouveaux / maxNvx;
-
-  function trame(t) {
-    if (monAnim !== animGraphe) return;
-    const prog = Math.min(1, (t - debut) / duree);
-    const ease = 1 - Math.pow(1 - prog, 3);
-    c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    c.clearRect(0, 0, W, H);
-    if (!n) return;
-
-    c.strokeStyle = "rgba(241,234,218,.06)"; c.lineWidth = 1;
-    c.setLineDash([1, 5]);
-    c.fillStyle = "rgba(143,134,114,.95)";
-    c.font = "10px -apple-system, 'Helvetica Neue', sans-serif";
-    c.textAlign = "right";
-    for (let i = 1; i <= 3; i++) {
-      const y = padH + lh - (lh * i / 3);
-      c.beginPath(); c.moveTo(padG, y); c.lineTo(W - padD, y); c.stroke();
-      c.fillText(eurCourt(maxEur * i / 3), padG - 8, y + 3);
-    }
-    c.setLineDash([]);
-
-    for (let i = 0; i < n; i++) {
-      const x = padG + pas * i + (pas - larg) / 2;
-      const h = Math.max(pts[i].eur > 0 ? 3 : 0, lh * pts[i].eur / maxEur) * ease;
-      const y = padH + lh - h;
-      if (h > 0) {
-        c.fillStyle = "#E9C761";
-        c.fillRect(x, y, larg, h);
-        // La valeur exacte au-dessus de la barre dès qu'il y a la place (sinon, le tableau dessous).
-        if (prog >= 1 && pas >= 18) {
-          c.fillStyle = "rgba(241,234,218,.92)";
-          c.font = (pas >= 40 ? "11px" : "9px") + " -apple-system, 'Helvetica Neue', sans-serif";
-          c.textAlign = "center";
-          c.fillText(String(Math.round(pts[i].eur)), x + larg / 2, y - 4);
-        }
-      } else {
-        c.fillStyle = "rgba(201,162,39,.22)";
-        c.fillRect(x, padH + lh - 1, larg, 1);
-      }
-    }
-
-    const nVisibles = Math.max(2, Math.ceil(n * ease));
-    c.strokeStyle = "#8FD9AC"; c.lineWidth = 1.6; c.lineJoin = "round";
-    c.beginPath();
-    for (let i = 0; i < nVisibles; i++) i ? c.lineTo(px(i), py(i)) : c.moveTo(px(i), py(i));
-    c.stroke();
-
-    c.fillStyle = "rgba(143,134,114,.95)";
-    c.font = "10px -apple-system, 'Helvetica Neue', sans-serif";
-    c.textAlign = "center";
-    const saut = Math.ceil(n / 8);
-    for (let i = 0; i < n; i += saut) c.fillText(pts[i].cle, px(i), H - 10);
-
-    if (prog < 1) requestAnimationFrame(trame);
-    else {
-      /* Le DERNIER point bat en continu : la page est en vie. */
-      const cadre = cv.getBoundingClientRect(), parent = cv.parentElement.getBoundingClientRect();
-      vif.style.left = (cadre.left - parent.left + px(n - 1) * (cadre.width / W)) + "px";
-      vif.style.top = (cadre.top - parent.top + py(n - 1) * (cadre.height / H)) + "px";
-      vif.hidden = false;
-    }
-  }
-  requestAnimationFrame(trame);
-}
-
 charger();
-setInterval(charger, 5 * 60 * 1000);
-window.addEventListener("resize", () => donnees && rendre());
-document.addEventListener("visibilitychange", () => !document.hidden && donnees && rendre());
 </script>
 </body>
 </html>
