@@ -73,7 +73,11 @@ const MOIS_FISCAUX = [
 const eur2 = (n) => (+n).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 const dJ = (iso, o) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", o);
 const majuscule = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-const PAYE = /^(Paid Subscription|Renewal|Reactivation)/;
+const PAYE = /^(Paid Subscription|Renewal|Reactivate\b|(Upgrade|Downgrade|Crossgrade) from Introductory Offer)/;
+// (1er oct. 2026) Apple écrit « Reactivate » (retour au payant), pas « Reactivation » : l'ancien motif
+// ratait ces retours et comptait à tort « Reactivation to Offer Code » (code promo, gratuit). Un
+// changement de formule en fin d'essai (« Downgrade from Introductory Offer »…) est aussi un
+// passage au payant. Recoupé : le total des passages = les 142 payants du 29 sept.
 
 function tictac() { const n = new Date(); document.getElementById("horloge").textContent = n.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); }
 tictac(); setInterval(tictac, 15000);
