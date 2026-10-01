@@ -114,9 +114,9 @@ function rendre(d) {
   const paiesDuJour = (j) => Object.entries(j.evenements || {}).filter(([k]) => PAYE.test(k)).reduce((a, [, n]) => a + (+n), 0);
   const totalPayes = jours.reduce((a, j) => a + paiesDuJour(j), 0);
   // Que du RÉEL (fondateur, 1er oct. 2026 : « je veux que de la vraie stat ») : plus de projection
-  // « × 7,08 € s'ils restent », l'encaissé net réellement versé sur les 30 derniers jours relevés.
-  const trente = jours.slice(-30);
-  const net30 = trente.reduce((a, j) => a + (+j.eur), 0);
+  // « × 7,08 € s'ils restent », l'encaissé net réellement versé sur les 7 derniers jours relevés.
+  const semaine = jours.slice(-7);
+  const net7 = semaine.reduce((a, j) => a + (+j.eur), 0);
   const versementLong = majuscule(dJ(mois.versement, { weekday: "long", day: "numeric", month: "long" }));
   const finMois = dJ(mois.fin, { day: "numeric", month: "long" });
   const debutMois = dJ(mois.debut, { day: "numeric", month: "long" });
@@ -139,14 +139,14 @@ function rendre(d) {
       <div class="etiq">Prochain virement d'Apple</div>
       <div class="grand" style="font-size:clamp(26px,7.5vw,40px);color:var(--encre)">${versementLong}</div>
       <div class="expl"><b>${eur2(netMois)} à ce jour</b>, sur le compte de MACOMCHEZDYS. C'est le mois fiscal Apple de ${mois.nom}, du ${debutMois} au ${finMois} : le montant grandit chaque jour jusqu'au ${finMois}, puis Apple le fige et le verse cinq semaines plus tard.</div>
-      <div class="expl">${horsEur.length ? `Dedans, <b>${horsEur.map(([dev, v]) => v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + dev).join(", ")}</b> encaissés en devises et convertis ici à un cours fixe : le virement réel pourra différer de quelques euros sur cette part. La part en euros, <b>${eur2(eurExact)}</b>, est exacte.` : "Tout est encaissé en euros : le montant est exact."}</div>
+      <div class="expl">${horsEur.length ? `Dedans, <b>${horsEur.map(([dev, v]) => v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + dev).join(", ")}</b> encaissés en devises, convertis au taux officiel du jour de la Banque centrale européenne : Apple appliquera son propre taux au virement, à quelques euros près sur cette part. La part en euros, <b>${eur2(eurExact)}</b>, est exacte.` : "Tout est encaissé en euros : le montant est exact."}</div>
     </div>
 
     <div class="carte">
       <div class="etiq">Où on en est</div>
       <div class="tuiles">
         <div class="tuile"><div class="n or">${dernier.payants}</div><div class="l">abonnés payants (au mois ou à l'année), selon Apple</div></div>
-        <div class="tuile"><div class="n eur">${eur2(net30)}</div><div class="l">encaissé net sur les ${trente.length} derniers jours relevés</div></div>
+        <div class="tuile"><div class="n eur">${eur2(net7)}</div><div class="l">encaissé net sur les ${semaine.length} derniers jours relevés</div></div>
         <div class="tuile"><div class="n">${dernier.essais}</div><div class="l">en essai gratuit, décision dans les jours qui viennent</div></div>
         <div class="tuile"><div class="n">${dernier.codes}</div><div class="l">codes invités actifs (gratuits)</div></div>
       </div>
