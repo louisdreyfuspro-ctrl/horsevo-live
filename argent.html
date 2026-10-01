@@ -72,6 +72,7 @@ const MOIS_FISCAUX = [
 const eur2 = (n) => (+n).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 const dJ = (iso, o) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", o);
 const majuscule = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+const de = (nom) => (/^[aeiouyàâéèêîôû]/i.test(nom) ? "d'" : "de ") + nom; // « d'octobre », « de septembre »
 const PAYE = /^(Paid Subscription|Renewal|Reactivate\b|(Upgrade|Downgrade|Crossgrade) from Introductory Offer)/;
 // (1er oct. 2026) Apple écrit « Reactivate » (retour au payant), pas « Reactivation » : l'ancien motif
 // ratait ces retours et comptait à tort « Reactivation to Offer Code » (code promo, gratuit). Un
@@ -168,9 +169,9 @@ function rendre(d) {
       <div class="etiq">Prochain virement d'Apple</div>
       <div class="grand" style="font-size:clamp(26px,7.5vw,40px);color:var(--encre)">${versementLong}</div>
       <div class="expl">${moisClos
-        ? `<b>${eur2(netMois)}</b>, montant arrêté, versé sur le compte de MACOMCHEZDYS : c'est le mois fiscal Apple de ${mois.nom}, du ${debutMois} au ${finMois}, clos depuis le ${finMois}.`
-        : `<b>${eur2(netMois)} à ce jour</b>, sur le compte de MACOMCHEZDYS. C'est le mois fiscal Apple de ${mois.nom}, du ${debutMois} au ${finMois} : le montant grandit chaque jour jusqu'au ${finMois}, puis Apple le fige et le verse cinq semaines plus tard.`}</div>
-      ${suivant ? `<div class="ligne" style="margin-top:10px"><span class="k">Puis ${dJ(suivant.versement, { weekday: "long", day: "numeric", month: "long" })} (mois de ${suivant.nom}, en cours)</span><span class="v or">${eur2(netSuivant)} à ce jour</span></div>` : ""}
+        ? `<b>${eur2(netMois)}</b>, montant arrêté, versé sur le compte de MACOMCHEZDYS : c'est le mois fiscal Apple ${de(mois.nom)}, du ${debutMois} au ${finMois}, clos depuis le ${finMois}.`
+        : `<b>${eur2(netMois)} à ce jour</b>, sur le compte de MACOMCHEZDYS. C'est le mois fiscal Apple ${de(mois.nom)}, du ${debutMois} au ${finMois} : le montant grandit chaque jour jusqu'au ${finMois}, puis Apple le fige et le verse cinq semaines plus tard.`}</div>
+      ${suivant ? `<div class="ligne" style="margin-top:10px"><span class="k">Puis ${dJ(suivant.versement, { weekday: "long", day: "numeric", month: "long" })} (mois ${de(suivant.nom)}, en cours)</span><span class="v or">${eur2(netSuivant)} à ce jour</span></div>` : ""}
       <div class="expl">${horsEur.length ? `Dedans, <b>${horsEur.map(([dev, v]) => v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + dev).join(", ")}</b> encaissés en devises, convertis au taux officiel du jour de la Banque centrale européenne : Apple appliquera son propre taux au virement, à quelques euros près sur cette part. La part en euros, <b>${eur2(eurExact)}</b>, est exacte.` : "Tout est encaissé en euros : le montant est exact."}</div>
     </div>
 
@@ -200,7 +201,7 @@ function rendre(d) {
       <div class="etiq">Comment lire cette page</div>
       <p><b>Net</b> veut dire après la TVA et la commission d'Apple. Sur un abonnement au mois à 9,99 €, il reste en réalité <b>${eur2(mens.moyen)}</b> en moyenne : Apple prend aujourd'hui 30 % de commission (15 % pour les entreprises inscrites à son programme « Small Business », 7,08 € par mois).</p>
       <p><b>Un jour de retard, toujours.</b> Apple publie les ventes d'une journée le lendemain vers 16 h 15 : la ligne d'aujourd'hui apparaîtra demain. Le nombre d'abonnés payants arrive un peu plus tard dans la soirée.</p>
-      <p><b>Le virement.</b> Apple compte par mois fiscaux qui se terminent un samedi, puis verse dans les 45 jours. Le prochain, celui du mois de ${mois.nom}, est attendu le ${versementLong.toLowerCase()}. Le montant exact au centime vient du rapport financier d'Apple, publié quelques jours après la fin du mois fiscal.</p>
+      <p><b>Le virement.</b> Apple compte par mois fiscaux qui se terminent un samedi, puis verse dans les 45 jours. Le prochain, celui du mois ${de(mois.nom)}, est attendu le ${versementLong.toLowerCase()}. Le montant exact au centime vient du rapport financier d'Apple, publié quelques jours après la fin du mois fiscal.</p>
     </div>
 
     <div class="pied">Écrit tout seul depuis les rapports officiels d'Apple.<br>${maj ? "Dernier relevé le " + maj.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " à " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : ""}</div>
