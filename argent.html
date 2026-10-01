@@ -103,9 +103,16 @@ function rendre(d) {
   const auj = new Date().toISOString().slice(0, 10);
 
   // Mois fiscal en cours et ce qu'il contient déjà
-  const mois = MOIS_FISCAUX.find((m) => auj >= m.debut && auj <= m.fin) || MOIS_FISCAUX[MOIS_FISCAUX.length - 1];
-  const dansMois = jours.filter((j) => j.jour >= mois.debut && j.jour <= mois.fin);
-  const netMois = dansMois.reduce((a, j) => a + (+j.eur), 0);
+  // Le PROCHAIN VIREMENT RÉEL (1er oct. 2026) : le premier mois fiscal pas encore versé qui porte de
+  // l'argent (Apple ne verse rien sous 10 €). Avant, la page prenait le mois fiscal EN COURS : le
+  // 1er oct elle annonçait le 3 décembre (107 €) et cachait le 5 novembre (presque tout l'argent).
+  const netDe = (m) => jours.filter((j) => j.jour >= m.debut && j.jour <= m.fin).reduce((a, j) => a + (+j.eur), 0);
+  const enCours = MOIS_FISCAUX.find((m) => auj >= m.debut && auj <= m.fin) || MOIS_FISCAUX[MOIS_FISCAUX.length - 1];
+  const mois = MOIS_FISCAUX.find((m) => m.versement >= auj && (auj <= m.fin || netDe(m) >= 10)) || enCours;
+  const netMois = netDe(mois);
+  const moisClos = auj > mois.fin;
+  const suivant = enCours !== mois ? enCours : null;
+  const netSuivant = suivant ? netDe(suivant) : 0;
   const devises = {};
   for (const j of jours) for (const [dev, v] of Object.entries(j.devises || {})) devises[dev] = (devises[dev] || 0) + (+v);
   const horsEur = Object.entries(devises).filter(([dev, v]) => dev !== "EUR" && v > 0);
@@ -160,7 +167,10 @@ function rendre(d) {
     <div class="carte">
       <div class="etiq">Prochain virement d'Apple</div>
       <div class="grand" style="font-size:clamp(26px,7.5vw,40px);color:var(--encre)">${versementLong}</div>
-      <div class="expl"><b>${eur2(netMois)} à ce jour</b>, sur le compte de MACOMCHEZDYS. C'est le mois fiscal Apple de ${mois.nom}, du ${debutMois} au ${finMois} : le montant grandit chaque jour jusqu'au ${finMois}, puis Apple le fige et le verse cinq semaines plus tard.</div>
+      <div class="expl">${moisClos
+        ? `<b>${eur2(netMois)}</b>, montant arrêté, versé sur le compte de MACOMCHEZDYS : c'est le mois fiscal Apple de ${mois.nom}, du ${debutMois} au ${finMois}, clos depuis le ${finMois}.`
+        : `<b>${eur2(netMois)} à ce jour</b>, sur le compte de MACOMCHEZDYS. C'est le mois fiscal Apple de ${mois.nom}, du ${debutMois} au ${finMois} : le montant grandit chaque jour jusqu'au ${finMois}, puis Apple le fige et le verse cinq semaines plus tard.`}</div>
+      ${suivant ? `<div class="ligne" style="margin-top:10px"><span class="k">Puis ${dJ(suivant.versement, { weekday: "long", day: "numeric", month: "long" })} (mois de ${suivant.nom}, en cours)</span><span class="v or">${eur2(netSuivant)} à ce jour</span></div>` : ""}
       <div class="expl">${horsEur.length ? `Dedans, <b>${horsEur.map(([dev, v]) => v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + dev).join(", ")}</b> encaissés en devises, convertis au taux officiel du jour de la Banque centrale européenne : Apple appliquera son propre taux au virement, à quelques euros près sur cette part. La part en euros, <b>${eur2(eurExact)}</b>, est exacte.` : "Tout est encaissé en euros : le montant est exact."}</div>
     </div>
 
@@ -190,7 +200,7 @@ function rendre(d) {
       <div class="etiq">Comment lire cette page</div>
       <p><b>Net</b> veut dire après la TVA et la commission d'Apple. Sur un abonnement au mois à 9,99 €, il reste en réalité <b>${eur2(mens.moyen)}</b> en moyenne : Apple prend aujourd'hui 30 % de commission (15 % pour les entreprises inscrites à son programme « Small Business », 7,08 € par mois).</p>
       <p><b>Un jour de retard, toujours.</b> Apple publie les ventes d'une journée le lendemain vers 16 h 15 : la ligne d'aujourd'hui apparaîtra demain. Le nombre d'abonnés payants arrive un peu plus tard dans la soirée.</p>
-      <p><b>Le virement.</b> Apple compte par mois fiscaux qui se terminent un samedi, puis verse dans les 45 jours. Le premier virement, celui du mois de ${mois.nom}, est attendu le ${versementLong.toLowerCase()}. Le montant devient définitif quand Apple publie son rapport financier, quelques jours après le ${finMois} : cette page l'affichera alors tel quel.</p>
+      <p><b>Le virement.</b> Apple compte par mois fiscaux qui se terminent un samedi, puis verse dans les 45 jours. Le prochain, celui du mois de ${mois.nom}, est attendu le ${versementLong.toLowerCase()}. Le montant exact au centime vient du rapport financier d'Apple, publié quelques jours après la fin du mois fiscal.</p>
     </div>
 
     <div class="pied">Écrit tout seul depuis les rapports officiels d'Apple.<br>${maj ? "Dernier relevé le " + maj.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " à " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : ""}</div>
