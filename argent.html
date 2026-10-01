@@ -113,7 +113,10 @@ function rendre(d) {
   const eurExact = devises.EUR || 0;
   const paiesDuJour = (j) => Object.entries(j.evenements || {}).filter(([k]) => PAYE.test(k)).reduce((a, [, n]) => a + (+n), 0);
   const totalPayes = jours.reduce((a, j) => a + paiesDuJour(j), 0);
-  const mrr = dernier.payants * NET_MENSUEL;
+  // Que du RÉEL (fondateur, 1er oct. 2026 : « je veux que de la vraie stat ») : plus de projection
+  // « × 7,08 € s'ils restent », l'encaissé net réellement versé sur les 30 derniers jours relevés.
+  const trente = jours.slice(-30);
+  const net30 = trente.reduce((a, j) => a + (+j.eur), 0);
   const versementLong = majuscule(dJ(mois.versement, { weekday: "long", day: "numeric", month: "long" }));
   const finMois = dJ(mois.fin, { day: "numeric", month: "long" });
   const debutMois = dJ(mois.debut, { day: "numeric", month: "long" });
@@ -142,8 +145,8 @@ function rendre(d) {
     <div class="carte">
       <div class="etiq">Où on en est</div>
       <div class="tuiles">
-        <div class="tuile"><div class="n or">${dernier.payants}</div><div class="l">abonnés qui paient chaque mois</div></div>
-        <div class="tuile"><div class="n eur">${eur2(mrr).replace(",00", "")}</div><div class="l">net attendu chaque mois s'ils restent (${dernier.payants} × ${NET_MENSUEL.toLocaleString("fr-FR")} €)</div></div>
+        <div class="tuile"><div class="n or">${dernier.payants}</div><div class="l">abonnés payants (au mois ou à l'année), selon Apple</div></div>
+        <div class="tuile"><div class="n eur">${eur2(net30)}</div><div class="l">encaissé net sur les ${trente.length} derniers jours relevés</div></div>
         <div class="tuile"><div class="n">${dernier.essais}</div><div class="l">en essai gratuit, décision dans les jours qui viennent</div></div>
         <div class="tuile"><div class="n">${dernier.codes}</div><div class="l">codes invités actifs (gratuits)</div></div>
       </div>
