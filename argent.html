@@ -61,7 +61,6 @@
 const JETON = (location.hash || "").slice(1);
 const RPC = "https://dqvmnetwdjidykmqaujg.supabase.co/rest/v1/rpc/finances_stats";
 const CLE_ANON = "sb_publishable_xV_Q76hgY9MFzjUEeFyo0Q_P0JLm1yb";
-const NET_MENSUEL = 7.08;            // ce qu'Apple reverse sur un abonnement à 9,99 € (TVA puis commission retirées)
 // Mois fiscaux Apple (semaines de 4 ou 5, fin le samedi) et versement ~5 semaines après la clôture.
 const MOIS_FISCAUX = [
   { nom: "août",      debut: "2026-08-02", fin: "2026-08-29", versement: "2026-10-01" },
@@ -117,6 +116,20 @@ function rendre(d) {
   // « × 7,08 € s'ils restent », l'encaissé net réellement versé sur les 7 derniers jours relevés.
   const semaine = jours.slice(-7);
   const net7 = semaine.reduce((a, j) => a + (+j.eur), 0);
+  // MENSUELS / ANNUELS (1er oct. 2026 : « je veux savoir ce que je vais toucher tous les mois »).
+  // Tout vient des rapports d'Apple : la durée de chaque abonnement, et le net RÉEL de chaque
+  // paiement (TVA, commission d'Apple et devises comprises).
+  const parDuree = (cle) => {
+    const tot = jours.reduce((a, j) => {
+      const c = (j.par_duree || {})[cle] || {};
+      return { eur: a.eur + (+c.eur || 0), paiements: a.paiements + (+c.paiements || 0) };
+    }, { eur: 0, paiements: 0 });
+    const payants = +(((dernier.par_duree || {})[cle] || {}).payants || 0);
+    return { ...tot, payants, moyen: tot.paiements ? tot.eur / tot.paiements : 0 };
+  };
+  const mens = parDuree("mois");
+  const ann = parDuree("an");
+  const parMois = mens.payants * mens.moyen;
   const versementLong = majuscule(dJ(mois.versement, { weekday: "long", day: "numeric", month: "long" }));
   const finMois = dJ(mois.fin, { day: "numeric", month: "long" });
   const debutMois = dJ(mois.debut, { day: "numeric", month: "long" });
@@ -135,6 +148,15 @@ function rendre(d) {
       <div class="ligne"><span class="k">Personnes passées au payant depuis le début</span><span class="v">${totalPayes}</span></div>
     </div>
 
+    <div class="carte or">
+      <div class="etiq">Ce que tu touches chaque mois</div>
+      <div class="grand">${eur2(parMois)}</div>
+      <div class="expl">Net par mois avec les <b>${mens.payants} abonnés au mois</b> d'aujourd'hui : chacun rapporte <b>${eur2(mens.moyen)}</b> net (moyenne réelle de leurs ${mens.paiements} paiements, après TVA et commission d'Apple). Chaque départ retire ce montant, chaque nouvel abonné l'ajoute.</div>
+      <div class="ligne" style="margin-top:12px"><span class="k">Abonnés à l'année</span><span class="v">${ann.payants}</span></div>
+      <div class="ligne"><span class="k">Déjà encaissé d'eux, pour toute l'année</span><span class="v or">${eur2(ann.eur)}</span></div>
+      <div class="expl" style="margin-top:8px">Ils ont payé l'année d'avance (<b>${eur2(ann.moyen)}</b> net chacun en moyenne) : plus rien d'eux avant la date anniversaire de leur abonnement.</div>
+    </div>
+
     <div class="carte">
       <div class="etiq">Prochain virement d'Apple</div>
       <div class="grand" style="font-size:clamp(26px,7.5vw,40px);color:var(--encre)">${versementLong}</div>
@@ -145,7 +167,7 @@ function rendre(d) {
     <div class="carte">
       <div class="etiq">Où on en est</div>
       <div class="tuiles">
-        <div class="tuile"><div class="n or">${dernier.payants}</div><div class="l">abonnés payants (au mois ou à l'année), selon Apple</div></div>
+        <div class="tuile"><div class="n or">${dernier.payants}</div><div class="l">abonnés payants selon Apple : ${mens.payants} au mois, ${ann.payants} à l'année</div></div>
         <div class="tuile"><div class="n eur">${eur2(net7)}</div><div class="l">encaissé net sur les ${semaine.length} derniers jours relevés</div></div>
         <div class="tuile"><div class="n">${dernier.essais}</div><div class="l">en essai gratuit, décision dans les jours qui viennent</div></div>
         <div class="tuile"><div class="n">${dernier.codes}</div><div class="l">codes invités actifs (gratuits)</div></div>
@@ -166,7 +188,7 @@ function rendre(d) {
 
     <div class="carte lire">
       <div class="etiq">Comment lire cette page</div>
-      <p><b>Net</b> veut dire après la TVA et la commission d'Apple. Sur un abonnement à 9,99 €, il reste ${NET_MENSUEL.toLocaleString("fr-FR")} €.</p>
+      <p><b>Net</b> veut dire après la TVA et la commission d'Apple. Sur un abonnement au mois à 9,99 €, il reste en réalité <b>${eur2(mens.moyen)}</b> en moyenne : Apple prend aujourd'hui 30 % de commission (15 % pour les entreprises inscrites à son programme « Small Business », 7,08 € par mois).</p>
       <p><b>Un jour de retard, toujours.</b> Apple publie les ventes d'une journée le lendemain vers 16 h 15 : la ligne d'aujourd'hui apparaîtra demain. Le nombre d'abonnés payants arrive un peu plus tard dans la soirée.</p>
       <p><b>Le virement.</b> Apple compte par mois fiscaux qui se terminent un samedi, puis verse dans les 45 jours. Le premier virement, celui du mois de ${mois.nom}, est attendu le ${versementLong.toLowerCase()}. Le montant devient définitif quand Apple publie son rapport financier, quelques jours après le ${finMois} : cette page l'affichera alors tel quel.</p>
     </div>
