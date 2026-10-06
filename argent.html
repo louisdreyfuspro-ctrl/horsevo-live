@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Horsevo · L'argent</title>
 <style>
-  :root { --fond:#0B0A08; --carte:#15130E; --bord:rgba(241,234,218,.09); --encre:#F1EADA; --gris:#9A917C; --or:#C9A227; --or-vif:#E9C761; --vert:#8FD9AC; }
+  :root { --fond:#0B0A08; --carte:#15130E; --bord:rgba(241,234,218,.09); --encre:#F1EADA; --gris:#9A917C; --or:#C9A227; --or-vif:#E9C761; --vert:#8FD9AC; --rouge:#E8907E; }
   * { margin:0; box-sizing:border-box; }
   html { -webkit-text-size-adjust:100%; }
   body { background:var(--fond); color:var(--encre); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",sans-serif; font-variant-numeric:tabular-nums; padding:18px 16px calc(36px + env(safe-area-inset-bottom)); line-height:1.4; }
@@ -34,13 +34,14 @@
   .tuile .n.or { color:var(--or-vif); } .tuile .n.vert { color:var(--vert); }
   .tuile .l { font-size:12px; color:var(--gris); margin-top:4px; line-height:1.3; }
   .tab { width:100%; border-collapse:collapse; margin-top:10px; font-size:13.5px; }
-  @media (max-width:420px) { .tab { font-size:12.5px; } .tab th { font-size:10px; letter-spacing:.02em; } .tab td { padding:8px 0; } }
   .tab th { text-align:right; font-weight:600; color:var(--gris); font-size:11px; letter-spacing:.04em; text-transform:uppercase; padding:6px 0 8px; }
   .tab th:first-child, .tab td:first-child { text-align:left; }
   .tab td { text-align:right; padding:9px 0; border-top:1px solid var(--bord); white-space:nowrap; }
-  .tab td.or { color:var(--or-vif); font-weight:700; } .tab td.vert { color:var(--vert); font-weight:600; } .tab td.mut { color:var(--gris); }
+  .tab td.or { color:var(--or-vif); font-weight:700; } .tab td.rouge { color:var(--rouge); } .tab td.vert { color:var(--vert); font-weight:600; } .tab td.mut { color:var(--gris); }
   .tab tr.total td { border-top:2px solid rgba(241,234,218,.25); font-weight:800; }
   .tab-cadre { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 -6px; padding:0 6px; }
+  /* Téléphone : APRÈS les règles de base du tableau (même spécificité, la dernière gagne). */
+  @media (max-width:420px) { .tab { font-size:12.5px; } .tab th { font-size:10.5px; letter-spacing:0; text-transform:none; } .tab td { padding:8px 0; } .tab td + td, .tab th + th { padding-left:4px; } .tab-cadre { margin:0 -6px; } }
   .puce { display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:700; background:rgba(143,217,172,.12); color:var(--vert); margin-left:8px; vertical-align:middle; }
   .puce.attente { background:rgba(201,162,39,.14); color:var(--or-vif); }
   .lire p { font-size:13.5px; color:var(--gris); margin-top:8px; line-height:1.55; }
@@ -120,6 +121,10 @@ function rendre(d) {
   const eurExact = devises.EUR || 0;
   const paiesDuJour = (j) => Object.entries(j.evenements || {}).filter(([k]) => PAYE.test(k)).reduce((a, [, n]) => a + (+n), 0);
   const totalPayes = jours.reduce((a, j) => a + paiesDuJour(j), 0);
+  // DÉPARTS (6 oct. 2026, fondateur : « pourquoi 139 payants alors que l'argent monte ? ») : abonnés
+  // qui payaient et ont arrêté + cartes refusées au renouvellement (Apple réessaie 16 jours). Comptés
+  // par le robot dans les événements d'Apple ; payants d'hier + nouveaux − départs = payants du jour.
+  const departsDuJour = (j) => (+((j.evenements || {})._departs_arrets) || 0) + (+((j.evenements || {})._departs_cartes) || 0);
   // Que du RÉEL (fondateur, 1er oct. 2026 : « je veux que de la vraie stat ») : plus de projection
   // « × 7,08 € s'ils restent », l'encaissé net réellement versé sur les 7 derniers jours relevés.
   const semaine = jours.slice(-7);
@@ -143,7 +148,7 @@ function rendre(d) {
   const debutMois = dJ(mois.debut, { day: "numeric", month: "long" });
 
   const quatorze = jours.slice(-14).reverse();
-  const totQ = quatorze.reduce((a, j) => ({ eur: a.eur + (+j.eur), payes: a.payes + paiesDuJour(j), nouveaux: a.nouveaux + (j.nouveaux || 0) }), { eur: 0, payes: 0, nouveaux: 0 });
+  const totQ = quatorze.reduce((a, j) => ({ eur: a.eur + (+j.eur), payes: a.payes + paiesDuJour(j), departs: a.departs + departsDuJour(j), nouveaux: a.nouveaux + (j.nouveaux || 0) }), { eur: 0, payes: 0, departs: 0, nouveaux: 0 });
 
   document.getElementById("contenu").className = "";
   document.getElementById("contenu").innerHTML = `
@@ -189,10 +194,10 @@ function rendre(d) {
     <div class="carte">
       <div class="etiq">Jour par jour, les 14 derniers</div>
       <div class="tab-cadre"><table class="tab">
-        <thead><tr><th>Jour</th><th>Encaissé</th><th>Nouv. payants</th><th>Total payants</th><th>Essais</th></tr></thead>
+        <thead><tr><th>Jour</th><th>Encaissé</th><th>Arrivées</th><th>Départs</th><th>Payants</th><th>Essais</th></tr></thead>
         <tbody>
-          ${quatorze.map((j) => `<tr><td>${majuscule(dJ(j.jour, { weekday: "short", day: "numeric", month: "short" }))}</td><td class="${+j.eur > 0 ? "or" : "mut"}">${eur2(j.eur)}</td><td class="${paiesDuJour(j) > 0 ? "vert" : "mut"}">${paiesDuJour(j) > 0 ? "+" + paiesDuJour(j) : "0"}</td><td>${j.payants}</td><td class="mut">+${j.nouveaux || 0}</td></tr>`).join("")}
-          <tr class="total"><td>14 jours</td><td class="or">${eur2(totQ.eur)}</td><td class="vert">+${totQ.payes}</td><td></td><td class="mut">+${totQ.nouveaux}</td></tr>
+          ${quatorze.map((j) => `<tr><td>${majuscule(dJ(j.jour, { weekday: "short" }))} ${+j.jour.slice(8, 10)}/${+j.jour.slice(5, 7)}</td><td class="${+j.eur > 0 ? "or" : "mut"}">${eur2(j.eur)}</td><td class="${paiesDuJour(j) > 0 ? "vert" : "mut"}">${paiesDuJour(j) > 0 ? "+" + paiesDuJour(j) : "0"}</td><td class="${departsDuJour(j) > 0 ? "rouge" : "mut"}">${departsDuJour(j) > 0 ? "−" + departsDuJour(j) : "0"}</td><td>${j.payants}</td><td class="mut">+${j.nouveaux || 0}</td></tr>`).join("")}
+          <tr class="total"><td>14 jours</td><td class="or">${eur2(totQ.eur)}</td><td class="vert">+${totQ.payes}</td><td class="${totQ.departs > 0 ? "rouge" : "mut"}">${totQ.departs > 0 ? "−" + totQ.departs : "0"}</td><td></td><td class="mut">+${totQ.nouveaux}</td></tr>
         </tbody>
       </table></div>
     </div>
@@ -200,6 +205,7 @@ function rendre(d) {
     <div class="carte lire">
       <div class="etiq">Comment lire cette page</div>
       <p><b>Net</b> veut dire après la TVA et la commission d'Apple. Sur un abonnement au mois à 9,99 €, il reste en réalité <b>${eur2(mens.moyen)}</b> en moyenne : Apple prend aujourd'hui 30 % de commission (15 % pour les entreprises inscrites à son programme « Small Business », 7,08 € par mois).</p>
+      <p><b>Départs.</b> Des abonnés qui payaient et qui ont arrêté (leur résiliation arrive au bout du mois déjà payé), plus les cartes refusées au renouvellement : Apple réessaie pendant 16 jours, la personne garde l'app et revient dans les payants si le paiement passe. Une résiliation pendant l'essai gratuit n'est pas un départ. Chaque jour : payants de la veille + arrivées − départs = payants du jour.</p>
       <p><b>Un jour de retard, toujours.</b> Apple publie les ventes d'une journée le lendemain vers 16 h 15 : la ligne d'aujourd'hui apparaîtra demain. Le nombre d'abonnés payants arrive un peu plus tard dans la soirée.</p>
       <p><b>Le virement.</b> Apple compte par mois fiscaux qui se terminent un samedi, puis verse dans les 45 jours. Le prochain, celui du mois ${de(mois.nom)}, est attendu le ${versementLong.toLowerCase()}. Le montant exact au centime vient du rapport financier d'Apple, publié quelques jours après la fin du mois fiscal.</p>
     </div>
