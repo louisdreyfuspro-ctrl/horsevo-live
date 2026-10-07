@@ -18,37 +18,42 @@
   .carte { background:var(--carte); border:1px solid var(--bord); border-radius:20px; padding:18px 18px 16px; margin-top:14px; }
   .carte.or { border-color:rgba(201,162,39,.35); }
   .etiq { font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--or); font-weight:700; }
-  .grand { font-size:clamp(40px,12vw,60px); font-weight:800; letter-spacing:-.03em; line-height:1.05; margin-top:8px; color:var(--or-vif); word-break:keep-all; white-space:nowrap; }
-  .grand small { font-size:.5em; font-weight:700; letter-spacing:0; margin-left:4px; color:var(--or); }
+  .grand { font-size:clamp(44px,13vw,64px); font-weight:800; letter-spacing:-.03em; line-height:1.05; margin-top:8px; color:var(--or-vif); white-space:nowrap; }
   .expl { font-size:14px; color:var(--gris); margin-top:10px; line-height:1.5; }
   .expl b { color:var(--encre); font-weight:600; }
-  .ligne { display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:10px 0; border-top:1px solid var(--bord); font-size:15px; }
-  .ligne:first-of-type { border-top:0; }
+  .ligne { display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:11px 0; border-top:1px solid var(--bord); font-size:15px; }
+  .ligne:first-child { border-top:0; }
   .ligne .k { color:var(--gris); }
   .ligne .v { font-weight:700; color:var(--encre); white-space:nowrap; }
-  .ligne .v.or { color:var(--or-vif); }
-  .tuiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
-  .tuile { background:rgba(241,234,218,.04); border:1px solid var(--bord); border-radius:14px; padding:12px 12px 10px; }
-  .tuile .n { font-size:26px; font-weight:800; letter-spacing:-.02em; line-height:1.1; white-space:nowrap; }
-  .tuile .n.eur { font-size:22px; }
-  .tuile .n.or { color:var(--or-vif); } .tuile .n.vert { color:var(--vert); }
-  .tuile .l { font-size:12px; color:var(--gris); margin-top:4px; line-height:1.3; }
-  .tab { width:100%; border-collapse:collapse; margin-top:10px; font-size:13.5px; }
+  .ligne .v.or { color:var(--or-vif); } .ligne .v.vert { color:var(--vert); } .ligne .v.rouge { color:var(--rouge); }
+  .ligne.total { border-top:2px solid rgba(241,234,218,.25); }
+  .ligne.total .k { color:var(--encre); font-weight:600; }
+  .ligne.total .v { font-size:20px; }
+  .bloc { margin-top:12px; }
+  .barre { display:flex; height:10px; border-radius:999px; overflow:hidden; background:rgba(232,144,126,.35); margin-top:14px; }
+  .barre i { display:block; background:var(--vert); }
+  .tab { width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
   .tab th { text-align:right; font-weight:600; color:var(--gris); font-size:11px; letter-spacing:.04em; text-transform:uppercase; padding:6px 0 8px; }
   .tab th:first-child, .tab td:first-child { text-align:left; }
-  .tab td { text-align:right; padding:9px 0; border-top:1px solid var(--bord); white-space:nowrap; }
+  .tab td { text-align:right; padding:10px 0; border-top:1px solid var(--bord); white-space:nowrap; }
+  .tab td + td, .tab th + th { padding-left:8px; }
   .tab td.or { color:var(--or-vif); font-weight:700; } .tab td.rouge { color:var(--rouge); } .tab td.vert { color:var(--vert); font-weight:600; } .tab td.mut { color:var(--gris); }
-  .tab tr.total td { border-top:2px solid rgba(241,234,218,.25); font-weight:800; }
+  .tab tr.encours td:first-child::after { content:"en cours"; display:inline-block; margin-left:6px; padding:1px 7px; border-radius:999px; font-size:10px; font-weight:700; background:rgba(201,162,39,.14); color:var(--or-vif); vertical-align:middle; }
   .tab-cadre { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 -6px; padding:0 6px; }
-  /* Téléphone : APRÈS les règles de base du tableau (même spécificité, la dernière gagne). */
-  @media (max-width:420px) { .tab { font-size:12.5px; } .tab th { font-size:10.5px; letter-spacing:0; text-transform:none; } .tab td { padding:8px 0; } .tab td + td, .tab th + th { padding-left:4px; } .tab-cadre { margin:0 -6px; } }
-  .puce { display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:700; background:rgba(143,217,172,.12); color:var(--vert); margin-left:8px; vertical-align:middle; }
-  .puce.attente { background:rgba(201,162,39,.14); color:var(--or-vif); }
-  .lire p { font-size:13.5px; color:var(--gris); margin-top:8px; line-height:1.55; }
+  @media (max-width:420px) { .tab { font-size:12.5px; } .tab th { font-size:10px; letter-spacing:0; text-transform:none; } .tab td { padding:9px 0; } .tab td + td, .tab th + th { padding-left:4px; } .tab tr.encours td:first-child::after { display:none; } }
+  .petit { display:flex; justify-content:space-between; align-items:baseline; gap:12px; font-size:14px; color:var(--gris); padding:9px 0; border-top:1px solid var(--bord); }
+  .petit:first-of-type { border-top:0; }
+  .petit b { color:var(--encre); font-weight:700; white-space:nowrap; }
+  details { margin-top:14px; background:var(--carte); border:1px solid var(--bord); border-radius:20px; padding:14px 18px; }
+  summary { cursor:pointer; list-style:none; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--or); font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:"+"; font-size:18px; letter-spacing:0; color:var(--gris); }
+  details[open] summary::after { content:"−"; }
+  summary:focus-visible { outline:2px solid var(--or); outline-offset:4px; border-radius:6px; }
+  .lire p { font-size:13.5px; color:var(--gris); margin-top:10px; line-height:1.55; }
   .lire p b { color:var(--encre); font-weight:600; }
   .pied { margin-top:22px; font-size:12px; color:var(--gris); text-align:center; line-height:1.6; }
   .erreur { text-align:center; padding:70px 20px; color:var(--gris); font-size:14px; }
-  @media (min-width:560px) { .tuiles { grid-template-columns:repeat(4,1fr); } }
 </style>
 </head>
 <body>
@@ -62,7 +67,7 @@
 const JETON = (location.hash || "").slice(1);
 const RPC = "https://dqvmnetwdjidykmqaujg.supabase.co/rest/v1/rpc/finances_stats";
 const CLE_ANON = "sb_publishable_xV_Q76hgY9MFzjUEeFyo0Q_P0JLm1yb";
-// Mois fiscaux Apple (semaines de 4 ou 5, fin le samedi) et versement ~5 semaines après la clôture.
+// Mois fiscaux Apple (fin le samedi) et versement ~5 semaines après la clôture : pour le prochain virement.
 const MOIS_FISCAUX = [
   { nom: "août",      debut: "2026-08-02", fin: "2026-08-29", versement: "2026-10-01" },
   { nom: "septembre", debut: "2026-08-30", fin: "2026-09-26", versement: "2026-11-05" },
@@ -73,12 +78,13 @@ const MOIS_FISCAUX = [
 const eur2 = (n) => (+n).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 const dJ = (iso, o) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", o);
 const majuscule = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-const de = (nom) => (/^[aeiouyàâéèêîôû]/i.test(nom) ? "d'" : "de ") + nom; // « d'octobre », « de septembre »
+const nomMois = (ym) => new Date(ym + "-15T12:00:00").toLocaleDateString("fr-FR", { month: "long" });
+const deMois = (nom) => (/^[aeiouyàâéèêîôû]/i.test(nom) ? "d'" : "de ") + nom; // « d'octobre », « de septembre »
+const enMois = (nom) => "en " + nom;
+// Passages au payant dans les événements d'Apple (« Reactivate », pas « Reactivation » ; un changement
+// de formule en fin d'essai compte aussi). Recoupé le 1er oct. avec les payants du jour.
 const PAYE = /^(Paid Subscription|Renewal|Reactivate\b|(Upgrade|Downgrade|Crossgrade) from Introductory Offer)/;
-// (1er oct. 2026) Apple écrit « Reactivate » (retour au payant), pas « Reactivation » : l'ancien motif
-// ratait ces retours et comptait à tort « Reactivation to Offer Code » (code promo, gratuit). Un
-// changement de formule en fin d'essai (« Downgrade from Introductory Offer »…) est aussi un
-// passage au payant. Recoupé : le total des passages = les 142 payants du 29 sept.
+const arrivees = (j) => Object.entries(j.evenements || {}).filter(([k]) => PAYE.test(k)).reduce((a, [, n]) => a + (+n), 0);
 
 function tictac() { const n = new Date(); document.getElementById("horloge").textContent = n.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); }
 tictac(); setInterval(tictac, 15000);
@@ -97,118 +103,116 @@ async function charger() {
   }
 }
 
+/** MOIS PAR MOIS (fondateur, 7 oct. 2026 : « il faut le mettre au mois, je veux un truc plus clair, on se
+ *  perd ; je veux voir qui reste, qui part, ce qui rentre tous les mois en repartant de 0 à chaque fois, et
+ *  l'argent cumulé depuis le début mais en plus petit »). Mois du calendrier ; payants au début = ceux
+ *  du dernier jour du mois d'avant ; départs = début + arrivées − fin (arrêts et cartes refusées). */
+function parMois(jours) {
+  const groupes = new Map();
+  for (const j of jours) { const k = j.jour.slice(0, 7); if (!groupes.has(k)) groupes.set(k, []); groupes.get(k).push(j); }
+  const out = [];
+  let finPrec = 0;
+  for (const [ym, js] of [...groupes.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+    const dernier = js[js.length - 1];
+    const eur = js.reduce((a, j) => a + (+j.eur), 0);
+    const annuels = js.reduce((a, j) => a + (+(((j.par_duree || {}).an || {}).eur) || 0), 0);
+    const arr = js.reduce((a, j) => a + arrivees(j), 0);
+    const fin = +dernier.payants || 0;
+    const departs = Math.max(0, finPrec + arr - fin);
+    out.push({ ym, nom: nomMois(ym), jours: js, dernierJour: dernier.jour, eur, annuels, debut: finPrec, arr, departs, fin, essais: dernier.essais, codes: dernier.codes, nouveaux: js.reduce((a, j) => a + (+j.nouveaux || 0), 0) });
+    finPrec = fin;
+  }
+  return out;
+}
+
 function rendre(d) {
   const jours = (d.jours || []).slice().sort((a, b) => a.jour.localeCompare(b.jour));
-  const dernier = jours[jours.length - 1] || { jour: null, essais: 0, codes: 0, payants: 0, nouveaux: 0, eur: 0 };
+  const mois = parMois(jours);
   const total = +d.total_eur;
   const maj = d.maj ? new Date(d.maj) : null;
   const auj = new Date().toISOString().slice(0, 10);
+  const moisAuj = auj.slice(0, 7);
+  const dernier = jours[jours.length - 1] || null;
 
-  // Mois fiscal en cours et ce qu'il contient déjà
-  // Le PROCHAIN VIREMENT RÉEL (1er oct. 2026) : le premier mois fiscal pas encore versé qui porte de
-  // l'argent (Apple ne verse rien sous 10 €). Avant, la page prenait le mois fiscal EN COURS : le
-  // 1er oct elle annonçait le 3 décembre (107 €) et cachait le 5 novembre (presque tout l'argent).
+  // Le mois en cours repart de zéro le 1er : tant qu'Apple n'a publié aucune journée du mois, il vaut 0.
+  let courant = mois.find((m) => m.ym === moisAuj);
+  if (!courant) courant = { ym: moisAuj, nom: nomMois(moisAuj), jours: [], dernierJour: null, eur: 0, annuels: 0, debut: dernier ? +dernier.payants : 0, arr: 0, departs: 0, fin: dernier ? +dernier.payants : 0, essais: dernier ? dernier.essais : 0, codes: dernier ? dernier.codes : 0, nouveaux: 0 };
+  const precedent = mois.filter((m) => m.ym < courant.ym).pop() || null;
+  const restes = Math.max(0, courant.debut - courant.departs);
+  const partRestes = courant.debut ? Math.round((restes / courant.debut) * 100) : null;
+  const premierDuMois = dJ(courant.ym + "-01", { day: "numeric", month: "long" }).replace(/^1 /, "1er ");
+  const jusquAu = courant.dernierJour ? majuscule(dJ(courant.dernierJour, { weekday: "long", day: "numeric", month: "long" })) : null;
+
+  // Prochain virement réel d'Apple : le premier mois fiscal pas encore versé qui porte de l'argent.
   const netDe = (m) => jours.filter((j) => j.jour >= m.debut && j.jour <= m.fin).reduce((a, j) => a + (+j.eur), 0);
-  const enCours = MOIS_FISCAUX.find((m) => auj >= m.debut && auj <= m.fin) || MOIS_FISCAUX[MOIS_FISCAUX.length - 1];
-  const mois = MOIS_FISCAUX.find((m) => m.versement >= auj && (auj <= m.fin || netDe(m) >= 10)) || enCours;
-  const netMois = netDe(mois);
-  const moisClos = auj > mois.fin;
-  const suivant = enCours !== mois ? enCours : null;
-  const netSuivant = suivant ? netDe(suivant) : 0;
-  const devises = {};
-  for (const j of jours) for (const [dev, v] of Object.entries(j.devises || {})) devises[dev] = (devises[dev] || 0) + (+v);
-  const horsEur = Object.entries(devises).filter(([dev, v]) => dev !== "EUR" && v > 0);
-  const eurExact = devises.EUR || 0;
-  const paiesDuJour = (j) => Object.entries(j.evenements || {}).filter(([k]) => PAYE.test(k)).reduce((a, [, n]) => a + (+n), 0);
-  const totalPayes = jours.reduce((a, j) => a + paiesDuJour(j), 0);
-  // DÉPARTS (6 oct. 2026, fondateur : « pourquoi 139 payants alors que l'argent monte ? ») : abonnés
-  // qui payaient et ont arrêté + cartes refusées au renouvellement (Apple réessaie 16 jours). Comptés
-  // par le robot dans les événements d'Apple ; payants d'hier + nouveaux − départs = payants du jour.
-  const departsDuJour = (j) => (+((j.evenements || {})._departs_arrets) || 0) + (+((j.evenements || {})._departs_cartes) || 0);
-  // Que du RÉEL (fondateur, 1er oct. 2026 : « je veux que de la vraie stat ») : plus de projection
-  // « × 7,08 € s'ils restent », l'encaissé net réellement versé sur les 7 derniers jours relevés.
-  const semaine = jours.slice(-7);
-  const net7 = semaine.reduce((a, j) => a + (+j.eur), 0);
-  // MENSUELS / ANNUELS (1er oct. 2026 : « je veux savoir ce que je vais toucher tous les mois »).
-  // Tout vient des rapports d'Apple : la durée de chaque abonnement, et le net RÉEL de chaque
-  // paiement (TVA, commission d'Apple et devises comprises).
-  const parDuree = (cle) => {
-    const tot = jours.reduce((a, j) => {
-      const c = (j.par_duree || {})[cle] || {};
-      return { eur: a.eur + (+c.eur || 0), paiements: a.paiements + (+c.paiements || 0) };
-    }, { eur: 0, paiements: 0 });
-    const payants = +(((dernier.par_duree || {})[cle] || {}).payants || 0);
-    return { ...tot, payants, moyen: tot.paiements ? tot.eur / tot.paiements : 0 };
-  };
-  const mens = parDuree("mois");
-  const ann = parDuree("an");
-  const parMois = mens.payants * mens.moyen;
-  const versementLong = majuscule(dJ(mois.versement, { weekday: "long", day: "numeric", month: "long" }));
-  const finMois = dJ(mois.fin, { day: "numeric", month: "long" });
-  const debutMois = dJ(mois.debut, { day: "numeric", month: "long" });
+  const enCoursFiscal = MOIS_FISCAUX.find((m) => auj >= m.debut && auj <= m.fin) || MOIS_FISCAUX[MOIS_FISCAUX.length - 1];
+  const fiscal = MOIS_FISCAUX.find((m) => m.versement >= auj && (auj <= m.fin || netDe(m) >= 10)) || enCoursFiscal;
+  const fiscalClos = auj > fiscal.fin;
 
+  const lignesMois = mois.slice().reverse();
   const quatorze = jours.slice(-14).reverse();
-  const totQ = quatorze.reduce((a, j) => ({ eur: a.eur + (+j.eur), payes: a.payes + paiesDuJour(j), departs: a.departs + departsDuJour(j), nouveaux: a.nouveaux + (j.nouveaux || 0) }), { eur: 0, payes: 0, departs: 0, nouveaux: 0 });
+  const departsDuJour = (j) => (+((j.evenements || {})._departs_arrets) || 0) + (+((j.evenements || {})._departs_cartes) || 0);
 
   document.getElementById("contenu").className = "";
   document.getElementById("contenu").innerHTML = `
     <div class="carte or">
-      <div class="etiq">Ce qu'Apple te doit aujourd'hui</div>
-      <div class="grand">${eur2(total)}</div>
-      <div class="expl">Encaissé <b>net</b> depuis le lancement, TVA et commission Apple déjà retirées : c'est la somme qui arrivera sur le compte, pas le chiffre d'affaires.</div>
-      <div class="ligne" style="margin-top:12px"><span class="k">Dernière journée comptée</span><span class="v">${dernier.jour ? majuscule(dJ(dernier.jour, { weekday: "long", day: "numeric", month: "long" })) : "—"}</span></div>
-      <div class="ligne"><span class="k">Encaissé ce jour-là</span><span class="v or">${eur2(dernier.eur)}</span></div>
-      <div class="ligne"><span class="k">Personnes passées au payant depuis le début</span><span class="v">${totalPayes}</span></div>
-    </div>
-
-    <div class="carte or">
-      <div class="etiq">Ce que tu touches chaque mois</div>
-      <div class="grand">${eur2(parMois)}</div>
-      <div class="expl">Net par mois avec les <b>${mens.payants} abonnés au mois</b> d'aujourd'hui : chacun rapporte <b>${eur2(mens.moyen)}</b> net (moyenne réelle de leurs ${mens.paiements} paiements, après TVA et commission d'Apple). Chaque départ retire ce montant, chaque nouvel abonné l'ajoute.</div>
-      <div class="ligne" style="margin-top:12px"><span class="k">Abonnés à l'année</span><span class="v">${ann.payants}</span></div>
-      <div class="ligne"><span class="k">Déjà encaissé d'eux, pour toute l'année</span><span class="v or">${eur2(ann.eur)}</span></div>
-      <div class="expl" style="margin-top:8px">Ils ont payé l'année d'avance (<b>${eur2(ann.moyen)}</b> net chacun en moyenne) : plus rien d'eux avant la date anniversaire de leur abonnement.</div>
+      <div class="etiq">Encaissé ${enMois(courant.nom)}</div>
+      <div class="grand">${eur2(courant.eur)}</div>
+      <div class="expl">Net, après la TVA et la commission d'Apple. Le compteur repart de zéro le 1er de chaque mois. ${jusquAu
+        ? `Compté jusqu'au <b>${jusquAu.toLowerCase()}</b> : Apple publie chaque journée le lendemain vers 16 h 15.`
+        : `Apple n'a encore publié aucune journée ${deMois(courant.nom)} : la première arrive le lendemain vers 16 h 15.`}</div>
+      ${precedent ? `<div class="ligne" style="margin-top:12px"><span class="k">${majuscule(precedent.nom)}, le mois entier</span><span class="v or">${eur2(precedent.eur)}</span></div>` : ""}
     </div>
 
     <div class="carte">
-      <div class="etiq">Prochain virement d'Apple</div>
-      <div class="grand" style="font-size:clamp(26px,7.5vw,40px);color:var(--encre)">${versementLong}</div>
-      <div class="expl">${moisClos
-        ? `<b>${eur2(netMois)}</b>, montant arrêté, versé sur le compte de MACOMCHEZDYS : c'est le mois fiscal Apple ${de(mois.nom)}, du ${debutMois} au ${finMois}, clos depuis le ${finMois}.`
-        : `<b>${eur2(netMois)} à ce jour</b>, sur le compte de MACOMCHEZDYS. C'est le mois fiscal Apple ${de(mois.nom)}, du ${debutMois} au ${finMois} : le montant grandit chaque jour jusqu'au ${finMois}, puis Apple le fige et le verse cinq semaines plus tard.`}</div>
-      ${suivant ? `<div class="ligne" style="margin-top:10px"><span class="k">Puis ${dJ(suivant.versement, { weekday: "long", day: "numeric", month: "long" })} (mois ${de(suivant.nom)}, en cours)</span><span class="v or">${eur2(netSuivant)} à ce jour</span></div>` : ""}
-      <div class="expl">${horsEur.length ? `Dedans, <b>${horsEur.map(([dev, v]) => v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + dev).join(", ")}</b> encaissés en devises, convertis au taux officiel du jour de la Banque centrale européenne : Apple appliquera son propre taux au virement, à quelques euros près sur cette part. La part en euros, <b>${eur2(eurExact)}</b>, est exacte.` : "Tout est encaissé en euros : le montant est exact."}</div>
-    </div>
-
-    <div class="carte">
-      <div class="etiq">Où on en est</div>
-      <div class="tuiles">
-        <div class="tuile"><div class="n or">${dernier.payants}</div><div class="l">abonnés payants selon Apple : ${mens.payants} au mois, ${ann.payants} à l'année</div></div>
-        <div class="tuile"><div class="n eur">${eur2(net7)}</div><div class="l">encaissé net sur les ${semaine.length} derniers jours relevés</div></div>
-        <div class="tuile"><div class="n">${dernier.essais}</div><div class="l">en essai gratuit, décision dans les jours qui viennent</div></div>
-        <div class="tuile"><div class="n">${dernier.codes}</div><div class="l">codes invités actifs (gratuits)</div></div>
+      <div class="etiq">${majuscule(courant.nom)} : qui reste, qui part</div>
+      <div class="bloc">
+        <div class="ligne"><span class="k">Abonnés payants au ${premierDuMois}</span><span class="v">${courant.debut}</span></div>
+        <div class="ligne"><span class="k">Nouveaux abonnés payants</span><span class="v vert">+${courant.arr}</span></div>
+        <div class="ligne"><span class="k">Partis (arrêt ou carte refusée)</span><span class="v ${courant.departs ? "rouge" : ""}">${courant.departs ? "−" + courant.departs : "0"}</span></div>
+        <div class="ligne total"><span class="k">Abonnés payants aujourd'hui</span><span class="v">${courant.fin}</span></div>
       </div>
-      <div class="expl" style="margin-top:12px">Sur les <b>${dernier.essais + dernier.codes + dernier.payants}</b> personnes qui ont l'app ouverte aujourd'hui, <b>${dernier.payants}</b> paient. Nouveaux essais au dernier relevé : <b>+${dernier.nouveaux}</b>.</div>
+      ${courant.debut ? `<div class="barre" role="img" aria-label="${restes} restés sur ${courant.debut}"><i style="width:${(restes / courant.debut) * 100}%"></i></div>
+      <div class="expl"><b>${restes} sur ${courant.debut}</b> sont restés depuis le ${premierDuMois} (${partRestes} %), ${courant.departs} ${courant.departs > 1 ? "sont partis" : "est parti"}. Encore <b>${courant.essais}</b> en essai gratuit (décision dans les jours qui viennent) et ${courant.codes} codes invités, gratuits.</div>` : ""}
     </div>
 
     <div class="carte">
-      <div class="etiq">Jour par jour, les 14 derniers</div>
+      <div class="etiq">Mois par mois</div>
       <div class="tab-cadre"><table class="tab">
-        <thead><tr><th>Jour</th><th>Encaissé</th><th>Arrivées</th><th>Départs</th><th>Payants</th><th>Essais</th></tr></thead>
+        <thead><tr><th>Mois</th><th>Encaissé</th><th>Arrivés</th><th>Partis</th><th>Payants fin</th></tr></thead>
         <tbody>
-          ${quatorze.map((j) => `<tr><td>${majuscule(dJ(j.jour, { weekday: "short" }))} ${+j.jour.slice(8, 10)}/${+j.jour.slice(5, 7)}</td><td class="${+j.eur > 0 ? "or" : "mut"}">${eur2(j.eur)}</td><td class="${paiesDuJour(j) > 0 ? "vert" : "mut"}">${paiesDuJour(j) > 0 ? "+" + paiesDuJour(j) : "0"}</td><td class="${departsDuJour(j) > 0 ? "rouge" : "mut"}">${departsDuJour(j) > 0 ? "−" + departsDuJour(j) : "0"}</td><td>${j.payants}</td><td class="mut">+${j.nouveaux || 0}</td></tr>`).join("")}
-          <tr class="total"><td>14 jours</td><td class="or">${eur2(totQ.eur)}</td><td class="vert">+${totQ.payes}</td><td class="${totQ.departs > 0 ? "rouge" : "mut"}">${totQ.departs > 0 ? "−" + totQ.departs : "0"}</td><td></td><td class="mut">+${totQ.nouveaux}</td></tr>
+          ${lignesMois.map((m) => `<tr class="${m.ym === courant.ym ? "encours" : ""}"><td>${majuscule(m.nom)}</td><td class="${m.eur > 0 ? "or" : "mut"}">${eur2(m.eur)}</td><td class="${m.arr ? "vert" : "mut"}">${m.arr ? "+" + m.arr : "0"}</td><td class="${m.departs ? "rouge" : "mut"}">${m.departs ? "−" + m.departs : "0"}</td><td>${m.fin}</td></tr>`).join("")}
         </tbody>
       </table></div>
+      ${mois.filter((m) => m.annuels > 0).map((m) => `<div class="expl">${majuscule(m.nom)} compte <b>${eur2(m.annuels)}</b> d'abonnements à l'année, payés d'avance pour douze mois : ils ne repaieront qu'à la date anniversaire.</div>`).join("")}
+      ${mois.length && mois[0].eur === 0 ? `<div class="expl">${majuscule(mois[0].nom)} : le premier mois était offert, personne ne payait encore.</div>` : ""}
     </div>
 
-    <div class="carte lire">
-      <div class="etiq">Comment lire cette page</div>
-      <p><b>Net</b> veut dire après la TVA et la commission d'Apple. Sur un abonnement au mois à 9,99 €, il reste en réalité <b>${eur2(mens.moyen)}</b> en moyenne : Apple prend aujourd'hui 30 % de commission (15 % pour les entreprises inscrites à son programme « Small Business », 7,08 € par mois).</p>
-      <p><b>Départs.</b> Des abonnés qui payaient et qui ont arrêté (leur résiliation arrive au bout du mois déjà payé), plus les cartes refusées au renouvellement : Apple réessaie pendant 16 jours, la personne garde l'app et revient dans les payants si le paiement passe. Une résiliation pendant l'essai gratuit n'est pas un départ. Chaque jour : payants de la veille + arrivées − départs = payants du jour.</p>
-      <p><b>Un jour de retard, toujours.</b> Apple publie les ventes d'une journée le lendemain vers 16 h 15 : la ligne d'aujourd'hui apparaîtra demain. Le nombre d'abonnés payants arrive un peu plus tard dans la soirée.</p>
-      <p><b>Le virement.</b> Apple compte par mois fiscaux qui se terminent un samedi, puis verse dans les 45 jours. Le prochain, celui du mois ${de(mois.nom)}, est attendu le ${versementLong.toLowerCase()}. Le montant exact au centime vient du rapport financier d'Apple, publié quelques jours après la fin du mois fiscal.</p>
+    <div class="carte">
+      <div class="etiq">Depuis le lancement</div>
+      <div class="bloc">
+        <div class="petit"><span>Encaissé net, tout compris</span><b>${eur2(total)}</b></div>
+        <div class="petit"><span>Prochain virement d'Apple, ${dJ(fiscal.versement, { weekday: "long", day: "numeric", month: "long" })}</span><b>${eur2(netDe(fiscal))}${fiscalClos ? "" : " à ce jour"}</b></div>
+      </div>
     </div>
+
+    <details>
+      <summary>Jour par jour, les 14 derniers</summary>
+      <div class="tab-cadre"><table class="tab">
+        <thead><tr><th>Jour</th><th>Encaissé</th><th>Arrivés</th><th>Partis</th><th>Payants</th></tr></thead>
+        <tbody>
+          ${quatorze.map((j) => `<tr><td>${majuscule(dJ(j.jour, { weekday: "short" }))} ${+j.jour.slice(8, 10)}/${+j.jour.slice(5, 7)}</td><td class="${+j.eur > 0 ? "or" : "mut"}">${eur2(j.eur)}</td><td class="${arrivees(j) > 0 ? "vert" : "mut"}">${arrivees(j) > 0 ? "+" + arrivees(j) : "0"}</td><td class="${departsDuJour(j) > 0 ? "rouge" : "mut"}">${departsDuJour(j) > 0 ? "−" + departsDuJour(j) : "0"}</td><td>${j.payants}</td></tr>`).join("")}
+        </tbody>
+      </table></div>
+    </details>
+
+    <details class="lire">
+      <summary>Comment lire ces chiffres</summary>
+      <p><b>Net</b> veut dire après la TVA et la commission d'Apple : c'est ce qui arrive sur le compte de MACOMCHEZDYS, pas le chiffre d'affaires.</p>
+      <p><b>Partis.</b> Des abonnés qui payaient et qui ont arrêté, plus les cartes refusées au renouvellement (Apple réessaie pendant 16 jours, la personne revient si le paiement passe). Une résiliation pendant l'essai gratuit n'est pas un départ. Apple ne donne jamais les noms.</p>
+      <p><b>Un jour de retard, toujours.</b> Apple publie les ventes d'une journée le lendemain vers 16 h 15, le nombre d'abonnés un peu plus tard dans la soirée.</p>
+      <p><b>Le virement.</b> Apple compte par mois fiscaux qui finissent un samedi et verse dans les 45 jours : le montant exact au centime vient de son rapport financier.</p>
+    </details>
 
     <div class="pied">Écrit tout seul depuis les rapports officiels d'Apple.<br>${maj ? "Dernier relevé le " + maj.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " à " + maj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : ""}</div>
   `;
